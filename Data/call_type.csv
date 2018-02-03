@@ -1,0 +1,256 @@
+Call Type,Count,Violent,Larceny,Check
+Traffic/Vehicle Stop,145166,0,0,1
+Pedestrian Stop,132131,0,0,1
+Periodic Check,87300,0,0,1
+Disturbance of the Peace,63535,0,0,0
+Audible Burglar Alarm,51330,0,1,0
+Animal Related Incident,39314,0,0,0
+Trespassing,35749,0,0,0
+Status Check,34108,0,0,0
+9-1-1 Hang Up,30065,0,0,0
+Disturbance at a Business,29673,0,0,0
+Assistance Call,25812,0,0,0
+Suspicious Person,25561,0,0,1
+Check Temporary No Parking Signs,23086,0,0,0
+Municipal Code Violation,20232,0,0,0
+Citizen Flag,18715,0,0,0
+General Parking Problem,18429,0,0,0
+Loud Music,18268,0,0,0
+Traffic Hazard,16798,0,0,0
+Vehicle Parked in Alley,16464,0,0,0
+Follow Up,15561,0,0,0
+Found Property,15272,0,0,0
+Traffic Accident - No Injuries,14818,0,0,0
+Party Complaint,14615,0,0,0
+Public Intoxication,13878,0,0,0
+Mark & Tag Abandoned Vehicle,13681,0,0,0
+Suspicious Circumstances,13114,0,0,1
+Violation of Posted SIgn,13111,0,0,0
+Violation of Preferential Parking Zone,12937,0,0,0
+Petty Theft Report,12895,0,1,0
+Vehicle Blocking Driveway,12537,0,0,0
+Hit and Run Misdemeanor Investigation,12261,0,0,0
+Auto Burglary Report,10597,0,1,0
+Malicious Mischief Report,10143,0,0,0
+Suspicious Vehicle,9982,0,0,0
+Burglary Report,9892,0,1,0
+72 Hour Psychiatric Hold,9425,0,0,0
+Person Down,9295,0,0,0
+Traffic Control Request - Level 1,8770,0,0,0
+Family Disturbance,8734,0,0,0
+Battery Just Occurred,8202,1,0,0
+Lost Property,8136,0,1,0
+Health & Safety Code Violation,8114,0,0,0
+On Foot,7571,0,0,0
+Exhibition of Speed,7450,0,0,0
+Forensics Request - Fingerprint,6887,0,0,0
+Construction Noise,6611,0,0,0
+Loitering,6586,0,0,1
+Valet Zone Violation,6562,0,0,0
+Identity Theft,6388,0,1,0
+Fight,6239,0,0,0
+Petty Theft Just Occurred,6115,0,1,0
+Traffic Accident with Injuries,6039,0,0,0
+Drunk Driving Investigation,5681,0,0,0
+Grand Theft Report,5423,0,1,0
+Vehicle with Excessive Parking Violations,5393,0,0,0
+At Court,5232,0,0,0
+Drinking in Public,5170,0,0,0
+Violation of Temporary No Parking Signs,5118,0,0,0
+Bike Theft Report,4830,0,1,0
+Information Only Broadcast,4462,0,0,0
+Expired Registration,4452,0,0,0
+Theft of Recyclables,4444,0,0,1
+Red Zone Violation,4443,0,0,0
+Fraud Report,4333,0,0,0
+Unknown Trouble,4217,0,0,0
+Vehicle Cite & Tow (Parking Problem),4008,0,0,0
+Threats Report/Investigations,3988,0,0,0
+Failure to Pay Parking Fee,3866,0,0,0
+Grand Theft Auto Report,3761,0,1,0
+Transport Prisoner,3674,0,0,0
+Critical Missing Person,3355,0,0,0
+Leaf Blower Violation,3190,0,0,0
+Malicious Mischief Just Occurred,3166,0,0,0
+Silent Robbery Alarm,3113,1,0,0
+Handicap Zone Violation,2982,0,0,0
+Panic Alarm,2967,0,0,0
+Traffic Accident - No Injuries City Prop Involved,2894,0,0,0
+Battery Report,2847,1,0,0
+Theft Suspect in Custody,2798,0,1,0
+Elder Abuse,2721,0,0,0
+Transport,2713,0,0,0
+Civil Dispute,2674,0,0,0
+Injured Person,2535,0,0,0
+Keep The Peace,2453,0,0,0
+Vehicle Burglar Alarm,2389,0,1,0
+Inmate Requiring Medical Attention,2362,0,0,0
+Panhandling,2329,0,0,0
+Forensics Request - Miscellaneous,2305,0,0,0
+ENCAMPMENT,2241,0,0,0
+Administrative Incident,2218,0,0,0
+Traffic Collision - No Injuries,2199,0,0,0
+Vehicle Parked on Sidewalk,2096,0,0,0
+Abandoned Vehcile,2068,0,0,0
+Indecent Exposure Now,1942,0,0,0
+Report of Shots Fired,1888,1,0,0
+Out of Order Traffic Signals,1880,0,0,0
+FIRE REQUEST POLICE,1867,0,0,0
+Traffic Accident - Unknown Injuries,1851,0,0,0
+Harassing Phone Calls Report,1840,0,0,0
+Information Received Report,1836,0,0,0
+Fire,1806,0,0,0
+SCAR Investigation,1791,0,0,0
+9-1-1 Open Line,1780,0,0,0
+Urinating/Defecating in Public,1757,0,0,0
+Forensics Request - Photo,1732,0,0,0
+Death Investigation,1596,0,0,0
+Medical Emergency,1504,0,0,0
+Person with a Gun,1473,0,0,0
+Domestic Violence Just Occurred,1435,1,0,0
+Missing Person,1391,0,0,0
+Traffic Miscellaneous Report,1388,0,0,0
+Oversize Vehicle Violation,1320,0,0,0
+Found Person,1316,0,0,0
+Domestic Violence Now,1300,1,0,0
+Defrauding Inkeeper In Progress,1282,0,0,0
+Assault w/Deadly Wepaon Just Occurred,1268,0,0,0
+Violation of Restraining Order Report,1240,0,0,0
+Traffic Collision with Injuries,1235,0,0,0
+Stolen Vehicle Recovered,1185,0,0,0
+Malicious Mischief Now,1169,0,0,0
+Warrant Suspect Pick Up,1138,0,0,0
+Lewd Activity,1120,0,0,0
+Strongarm Robbery Just Occurred,1080,1,0,0
+Sexual Assault,1018,1,0,0
+Overdose,1015,0,0,0
+Petty Theft Now,939,0,1,0
+Living in a Vehicle,932,0,0,0
+Indecent Exposure Just Occurred,923,0,0,0
+Attempt Burglary Report,840,0,1,0
+Open Door,838,0,0,0
+Hit and Run Felony Investigation,838,0,0,0
+Battery Now,827,1,0,0
+Burglary Just Occurred,775,0,1,0
+Defrauding Inkeeper Just Occurred,773,0,0,0
+Stakeout,754,0,0,0
+Auto Burglary Just Occurred,725,0,1,0
+Domestic Violence Report,710,1,0,0
+Traffic Collision - Unknown Injuries,709,0,0,0
+Grand Theft Just Occurred,704,0,1,0
+Burglary Now,703,0,1,0
+Smoking VIolation,663,0,0,0
+Rape Report,650,0,0,0
+Medical Aid Alarm,645,0,0,0
+Assault Just Occurred,634,1,0,0
+Search Warrant,628,0,0,0
+Violation of Restraining Order In Progress,628,0,0,0
+Stolen Vehicle,626,0,1,0
+Burglary Investigation/Walk Through,613,0,1,0
+Armed Robbery Just Occurred,607,1,0,0
+Found Senile Person,600,0,0,0
+Suspicious Activity,580,0,0,1
+Traffic Collision - No Injuries City Prop Involved,536,0,0,0
+Silent Burglar Alarm,501,0,1,0
+Prowler,487,0,0,1
+Disturbance of the Peace Report,483,0,0,0
+Child Abuse,475,0,0,0
+Stalking Report,474,0,0,0
+Assault w/Deadly Weapon Report,462,0,0,0
+Vehicle Out of Space,460,0,0,0
+Illegal Weapon,421,0,0,0
+Runaway,411,0,0,0
+Alcohol & Beverage Code Violation,400,0,0,0
+Auto Burglary Now,400,0,1,0
+Juvenile Annoying Investigation,397,0,0,0
+Prowler Just Left,396,0,0,0
+Child Endangerment,392,0,0,0
+Trash Dumping,381,0,0,0
+Arson,365,0,0,0
+Prowler There Now,352,0,0,1
+Suicide Now,342,1,0,0
+Strongarm Robbery Report,341,1,0,0
+Violation of Restraining Order Just Occurred,336,0,0,0
+Death Notification,336,0,0,0
+Traffic Accident with Injuries City Prop Involved,333,0,0,0
+Attempt Burglary Just Occurred,321,0,1,0
+Fire Alarm,306,0,0,0
+Forgery Report,299,0,0,0
+Paparazzi Complaint,297,0,0,0
+LOJACK Hit,291,0,0,0
+Fraud Suspect There Now,271,0,0,0
+Grand Theft Auto Just Occurred,270,0,1,0
+Counterfeit Money Report,246,0,0,0
+Prostitution,242,0,0,0
+Defrauding Inkeeper Report,219,0,0,0
+Assault w/Deadly Wepaon Now,217,0,0,0
+Truant Juvenile,212,0,0,0
+Prowler Report,201,0,0,1
+Attempt Suicide,192,1,0,0
+Armed Robbery Report,158,1,0,0
+Traffic Control Request - Level 4,149,0,0,0
+Message,144,0,0,0
+Hazard Materials Investigation,144,0,0,0
+Attempt Auto Theft Report,143,0,1,0
+Attempt Strongarm Robbery Just Occurred,132,1,0,0
+Assault Report,131,1,0,0
+Child Molestation,129,0,0,0
+Officer Needs Backup,121,0,0,0
+Fraud Suspect Just Left,119,0,0,0
+Counterfeit Money Investigation,99,0,0,0
+Suicide Just Occurred,97,1,0,0
+Fitness Permit Violation,95,0,0,0
+Indecent Exposure Report,90,0,0,0
+Bomb Threat,88,0,0,0
+Rape Just Occurred,84,1,0,0
+Extortion Investigation,80,0,0,0
+Test Call Type,77,0,0,0
+Windshield Survey,73,0,0,0
+Attempt Armed Robbery Just Occurred,73,1,0,0
+Stalking Suspect There Now,72,0,0,0
+Kidnap Report,71,0,0,0
+Counterfeit Suspect There Now,67,0,0,0
+Resisting Arrest,58,0,0,0
+Kidnap Just Occurred,58,0,0,0
+Attempt Auto Theft Just Occurred,55,0,1,0
+Assault Now,53,1,0,0
+Attempt Homicde,53,1,0,0
+Grand Theft Now,53,0,1,0
+Officer Needs Help,51,0,0,0
+Strongarm Robbery Now,48,1,0,0
+Traffic Collision with Injuries City Prop Involved,48,0,0,0
+Intel Report,45,0,0,0
+Stalking Suspect Just Left,44,0,0,0
+Attempt Strongarm Robbery Report,42,1,0,0
+Grand Theft Auto In Progress,41,0,1,0
+Armed Robbery In Progress,40,1,0,0
+Front Office Relief,37,0,0,0
+Armed Robbery/Auto Theft Just Occurred,33,1,0,0
+Receiving Stolen Property Report,33,0,0,0
+Fatal Traffic Accident,23,0,0,0
+Receiving Stolen Property Suspect There Now,22,0,0,0
+Aircraft Crash,19,0,0,0
+Worthless Document Report,18,0,0,0
+Child Stealing,18,0,0,0
+Armed Robbery/Auto Theft Report,16,1,0,0
+Homicide,16,1,0,0
+Receiving Stolen Property Investigation,15,0,0,0
+Attempt Armed Robbery Report,13,1,0,0
+Rape Now,13,1,0,0
+Special Event,13,0,0,0
+Kidnap In Progress,12,0,0,0
+Forgery In Progress,11,0,0,0
+Vehicle Pursuit,11,0,0,0
+TCFAT Fatal Traffic Collision,7,0,0,0
+Forgery Just Occurred,6,0,0,0
+40 Minute Break,5,0,0,0
+Writing Reports,3,0,0,0
+Wanted Felon,3,0,0,0
+Silent Robbery Alarm (Police Board),2,1,0,0
+Wanted Vehicle,2,0,0,0
+Armed Robbery/Auto Theft In Progress,2,1,0,0
+20 Minute Break,1,0,0,0
+Burglar Alarm (Police Board),1,0,1,0
+VARDA Robbery Alarm,1,1,0,0
+Community Meeting,1,0,0,0
+Comm Center Relief,1,0,0,0
