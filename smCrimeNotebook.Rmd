@@ -1,0 +1,167 @@
+---
+title: "Santa Monica"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+## Santa Monica Crimes Data
+
+```{r}
+rm=(list=ls())
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+
+# Load in Incidents
+incidents <- read_csv("~/desktop/santa-monica-light-rail/Data/Police_Incidents_Final.csv")
+
+head(incidents)
+```
+
+```{r}
+# Set Up Variables
+
+# all incidents aggregated by month
+incidents.allByMonth <- incidents %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+# all incidents aggregated by day
+incidents.allByDay <- incidents %>%
+  group_by(`Date Occurred`) %>%
+  summarise(count=n())
+
+# all incidents within half mile aggregated by day
+incidents.halfMileByDay <- incidents %>%
+  filter(half_mile == "1") %>%
+  group_by(`Date Occurred`) %>% 
+  summarise(count=n())
+
+## Non Violent
+
+# all non violent incidents within half mile aggregated by month
+incidents.nvHalfMilebyMonth <- incidents %>%
+  filter(half_mile == "1" && `UCR Level 1` == "Non-Violent") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+# all non-violent incidents aggregated by month
+incidents.nvAllByMonth <- incidents %>%
+  filter(`UCR Level 1` == "Non-Violent") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+# all non-violent incidents aggregated by day
+incidents.nvAllByDay <- incidents %>%
+  filter(`UCR Level 1` == "Non-Violent") %>%
+  group_by(`Date Occurred`) %>%
+  summarise(count=n())
+
+# all non-violent incidents within half mile aggregated by day
+incidents.nvHalfMileByDay <- incidents %>%
+  filter(half_mile == "1" && `UCR Level 1` == "Non-Violent") %>%
+  group_by(`Date Occurred`) %>% 
+  summarise(count=n())
+
+# all non-violent incidents within half mile aggregated by month
+incidents.nvHalfMilebyMonth <- incidents %>%
+  filter(half_mile == "1" && `UCR Level 1` == "Non-Violent") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+## Violent
+
+# all violent incidents within half mile aggregated by month
+incidents.vHalfMilebyMonth <- incidents %>%
+  filter(half_mile == "1" && `UCR Level 1` == "Violent") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+# all  violent incidents aggregated by month
+incidents.vAllByMonth <- incidents %>%
+  filter(`UCR Level 1` == "Violent") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+# all violent incidents aggregated by day
+incidents.vAllByDay <- incidents %>%
+  filter(`UCR Level 1` == "Violent") %>%
+  group_by(`Date Occurred`) %>%
+  summarise(count=n())
+
+# all violent incidents within half mile aggregated by day
+incidents.vHalfMileByDay <- incidents %>%
+  filter(half_mile == "1" && `UCR Level 1` == "Violent") %>%
+  group_by(`Date Occurred`) %>% 
+  summarise(count=n())
+
+# all violent incidents within half mile aggregated by month
+incidents.vHalfMilebyMonth <- incidents %>%
+  filter(half_mile == "1" && `UCR Level 1` == "Violent") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+## Larceny
+
+# all larceny incidents within half mile aggregated by month
+incidents.larHalfMilebyMonth <- incidents %>%
+  filter(half_mile == "1" && `UCR Level 2` == "Larceny") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+# all larceny incidents aggregated by month
+incidents.larAllByMonth <- incidents %>%
+  filter(`UCR Level 2` == "Larceny") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+# all larceny incidents aggregated by day
+incidents.larAllByDay <- incidents %>%
+  filter(`UCR Level 2` == "Violent") %>%
+  group_by(`Date Occurred`) %>%
+  summarise(count=n())
+
+# all larceny incidents within half mile aggregated by day
+incidents.larHalfMileByDay <- incidents %>%
+  filter(half_mile == "1" && `UCR Level 2` == "Larceny") %>%
+  group_by(`Date Occurred`) %>% 
+  summarise(count=n())
+
+# all larceny incidents within half mile aggregated by month
+incidents.larHalfMilebyMonth <- incidents %>%
+  filter(half_mile == "1" && `UCR Level 2` == "Larceny") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(count=n())
+
+
+plot(incidents.allByMonth$count ~ incidents.allByMonth$month, xlab="Month", ylab="Number of Incidents", type="l")
+plot(incidents.allByDay$`count` ~ incidents.allByDay$`Date Occurred`, xlab="Month", ylab="Number of Incidents", type="l")
+```
+
+```{r}
+tsIncidents <- ts(incidents.allByMonth$count, frequency=12, start(c(2006, 1)))
+plot.ts(tsIncidents)
+incidentsComp = decompose(tsIncidents)
+plot(incidentsComp)
+
+```
+```{r}
+library(TTR)
+tsIncidentsByDay = ts(incidents.allByDay$`count`, frequency=365, start(c(2006,1)))
+incidentsDecomposed = decompose(tsIncidentsByDay)
+plot(incidentsDecomposed)
+```
+```{r}
+tsTotalIncidentsByMonth = ts(incidents.allByMonth$`count`, frequency=12, start(c(2006,1)))
+totalIncidentsDecomposed = decompose(tsTotalIncidentsByMonth)
+plot(totalIncidentsDecomposed)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
