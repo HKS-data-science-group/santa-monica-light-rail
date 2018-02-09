@@ -8,37 +8,119 @@ output:
 ## Santa Monica Crimes Data
 
 ```{r}
-rm=(list=ls())
+rm(list=ls())
 library(readr)
 library(ggplot2)
 library(dplyr)
 library(lubridate)
+library(forecast)
 
 # Load in Incidents
 incidents <- read_csv("~/desktop/santa-monica-light-rail/Data/Police_Incidents_Final.csv")
-
+incidents$count = 1 # add count column for easy of aggregation
 head(incidents)
 ```
 
 ```{r}
 # Set Up Variables
 
+
 # all incidents aggregated by month
 incidents.allByMonth <- incidents %>%
   group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
+  summarise(total = n(),
+            totalHalfMile = sum(count[half_mile=="1"]),
+            totalHalfToOneMile = sum(count[half_mile == "0" && one_mile == "1"]),
+            violent = sum(count[`UCR Level 1` == "Violent"]),
+            nonviolent = sum(count[`UCR Level 1` == "Non-Violent"]),
+            larceny = sum(count[`UCR Level 2` == "Larceny"]))
+
+## Treatment
+# all incidents a half-mile from the rail line by month
+incidents.hmByMonth <- incidents %>%
+  filter(half_mile == "1") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(total = n(),
+            violent = sum(count[`UCR Level 1` == "Violent"]),
+            nonviolent = sum(count[`UCR Level 1` == "Non-Violent"]),
+            larceny = sum(count[`UCR Level 2` == "Larceny"]))
+
+## Control
+# all incidents between one mile and a half-mile from the rail line by month
+incidents.oneToHmByMonth <- incidents %>%
+  filter(half_mile == "0" & one_mile == "1") %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(total = n(),
+            violent = sum(count[`UCR Level 1` == "Violent"]),
+            nonviolent = sum(count[`UCR Level 1` == "Non-Violent"]),
+            larceny = sum(count[`UCR Level 2` == "Larceny"]))
+
+```
+
+
+```{r}
+createTimeSeriesAndDecompose <- function(tsData, fq=12, stPeriod=c(2006,1)) {
+  decompose(ts(tsData, frequency=fq, start=stPeriod))
+}
+
+all <- createTimeSeriesAndDecompose(incidents.allByMonth$total)
+halfMile <- createTimeSeriesAndDecompose(incidents.hmByMonth$total)
+oneToHalfMile <- createTimeSeriesAndDecompose(incidents.oneToHmByMonth$total)
+
+vAll <- createTimeSeriesAndDecompose(incidents.allByMonth$violent)
+vHalfMile <- createTimeSeriesAndDecompose(incidents.hmByMonth$violent)
+vOneToHalfMile <- createTimeSeriesAndDecompose(incidents.oneToHmByMonth$violent)
+
+nvAll <- createTimeSeriesAndDecompose(incidents.allByMonth$nonviolent)
+nvHalfMile <- createTimeSeriesAndDecompose(incidents.hmByMonth$nonviolent)
+nvOneToHalfMile <- createTimeSeriesAndDecompose(incidents.oneToHmByMonth$nonviolent)
+
+larAll <- createTimeSeriesAndDecompose(incidents.allByMonth$larceny)
+larHalfMile <- createTimeSeriesAndDecompose(incidents.hmByMonth$larceny)
+larOneToHalfMile <- createTimeSeriesAndDecompose(incidents.oneToHmByMonth$larceny)
+
+ts.plot(halfMile$trend,oneToHalfMile$trend, gpars = list(col = c("blue", "red")))
+ts.plot(vHalfMile$trend, vOneToHalfMile$trend, gpars = list(col = c("blue", "red")))
+ts.plot(nvHalfMile$trend, nvOneToHalfMile$trend, gpars = list(col = c("blue", "red")))
+ts.plot(larHalfMile$trend, larOneToHalfMile$trend, gpars = list(col = c("blue", "red")))
+
+plot(halfMile)
+plot(oneToHalfMile)
+
+```
+
+```{r}
+# Regressions Difference in Difference
+```
+
+```{r}
+
+```
+library(TTR)
+tsIncidentsByDay = ts(incidents.allByDay$`count`, frequency=365, start(c(2006,1)))
+incidentsDecomposed = decompose(tsIncidentsByDay)
+plot(incidentsDecomposed)
+
+tsTotalIncidentsByMonth = ts(incidents.allByMonth$`count`, frequency=12, start(c(2006,1)))
+totalIncidentsDecomposed = decompose(tsTotalIncidentsByMonth)
+plot(totalIncidentsDecomposed)
 
 # all incidents aggregated by day
 incidents.allByDay <- incidents %>%
   group_by(`Date Occurred`) %>%
   summarise(count=n())
-
+  
+# all incidents between one mile and a half-mile from the rail line by day
+incidents.oneToHalfMileByDay <- incidents %>%
+  filter(half_mile == "0" && one_mile == "1") %>%
+  group_by(`Date Occurred`) %>% 
+  summarise(count=n())
+  
 # all incidents within half mile aggregated by day
 incidents.halfMileByDay <- incidents %>%
   filter(half_mile == "1") %>%
   group_by(`Date Occurred`) %>% 
   summarise(count=n())
-
 ## Non Violent
 
 # all non violent incidents within half mile aggregated by month
@@ -138,30 +220,3 @@ incidents.larHalfMilebyMonth <- incidents %>%
 
 plot(incidents.allByMonth$count ~ incidents.allByMonth$month, xlab="Month", ylab="Number of Incidents", type="l")
 plot(incidents.allByDay$`count` ~ incidents.allByDay$`Date Occurred`, xlab="Month", ylab="Number of Incidents", type="l")
-```
-
-```{r}
-tsIncidents <- ts(incidents.allByMonth$count, frequency=12, start(c(2006, 1)))
-plot.ts(tsIncidents)
-incidentsComp = decompose(tsIncidents)
-plot(incidentsComp)
-
-```
-```{r}
-library(TTR)
-tsIncidentsByDay = ts(incidents.allByDay$`count`, frequency=365, start(c(2006,1)))
-incidentsDecomposed = decompose(tsIncidentsByDay)
-plot(incidentsDecomposed)
-```
-```{r}
-tsTotalIncidentsByMonth = ts(incidents.allByMonth$`count`, frequency=12, start(c(2006,1)))
-totalIncidentsDecomposed = decompose(tsTotalIncidentsByMonth)
-plot(totalIncidentsDecomposed)
-```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
-
