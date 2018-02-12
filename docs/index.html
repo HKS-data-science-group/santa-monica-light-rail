@@ -22,24 +22,41 @@
 			<div class="container">
 				<div class="col-md-5">
 					<div class="row explanatory-text">
-						<p>The Metro Expo Line Extension to Santa Monica opened on May 20th, 2016, connecting Santa Monica to downtown Los Angeles.
-						Now that the line has been open for more than a year and a half, the city asked us to help them understand the impact of the line on crime.</p>
+						<p>In order to better understand the underlying trends in the noisy crimes per day data, we used an additive time series decomposition approach.</p>
+							<p>As you can see on the left, once seasonality and randomness (not shown) are removed from the actual time series data, the data indicates a clear
+							increase in larceny after the expo line opened.</p>
+						<p>This trend line is less clear for all crimes, indicating that at least part of the increase
+							in larceny was offset by a decrease in a number of other crime types.</p>
+						<p>We decided to take a closer look at larceny in particular as the initial trend
+						appeared to show some relationship with the opening of the Expo Line and the crime itself is associated with the petty crime one might expect around metro stations.</p>
 					</div>
 
-					<div class="row explanatory-text">
-						<p>We first looked at overall crime trends in the city, using a 90-day rolling average to smooth day to day variations while preserving the overall trend.
-						As the chart on the right illustrates, there appears to be a potential uptick in crime after the line, so we took a deeper look into the types of crime driving the uptick.</p>
-						<p>From this analysis, it was clear that larceny crimes showed a marked increase post opening of the expo line, especially those closer to Expo Line stations.</p>
-					</div>
 				</div>
 				<div class="col-md-7">
 					<div class="chart-title">
-						Crimes Per Day*
+						Crimes Per Day
 					</div>
-					<div id="timeline-chart">
+
+					<div class="radio-container">
+						<div class="radio-inline">
+							<label>
+								<input type="radio" name="crimeTypeRadios" id="allRadios1" value="all">
+								All
+							</label>
+						</div>
+						<div class="radio-inline">
+							<label>
+								<input type="radio" name="crimeTypeRadios" id="larcenyRadios2" value="larceny" checked>
+								Larceny
+							</label>
+						</div>
 					</div>
-					<div class="slider-container">
-						<div id="geography-slider"></div>
+
+					<div id="timeline-chart-actual">
+					</div>
+					<div id="timeline-chart-trend">
+					</div>
+					<div id="timeline-chart-seasonal">
 					</div>
 				</div>
 			</div>
@@ -80,10 +97,6 @@
 
 	<script src="js/handlers/handler-timeslide.js"></script>
 	<script src="js/visualizations/vis-timeline.js"></script>
-
-	<script>
-		initializeElements();
-	</script>
 
 </body>
 </html>

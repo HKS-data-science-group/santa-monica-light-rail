@@ -35,6 +35,16 @@ body {
 
 .crime-line {
     fill: none;
+    stroke: #CD6737;
+}
+
+.crime-tooltip-label {
+    fill: #CD6737;
+}
+
+.radio-container {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .expo-opening-line {
@@ -47,10 +57,10 @@ body {
 }
 
 .axis-label {
-    fill: grey;
-    font-family: 'Lato',sans-serif;
+    fill: black;
     font-size: 15px;
-    text-transform: capitalize;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .x-axis text {
@@ -94,23 +104,6 @@ body {
     margin: -1px 0 0 0;
     top: 100%;
     left: 0;
-}
-#geography-slider span {
-    background-color: #09091a;
-    border: solid 1px #c0c0c8;
-}
-
-#geography-slider {
-    height: 100px;
-    display: inline-block;
-    background-color: #c0c0c8;
-}
-
-.slider-container {
-    border-radius: 4px;
-    padding: 10px 10px 10px 10px;
-    display: inline-block;
-    background-color: #09091a;
 }
 
 .overlay {

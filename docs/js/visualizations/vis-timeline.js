@@ -1,18 +1,19 @@
 
-LineVis = function(_parentElement, _trendData){
+LineVis = function(_parentElement, _data, _chartType){
     this.parentElement = _parentElement;
-    this.data = _trendData;
-    this.displayData = _trendData;
+    this.data = _data;
+    this.displayData = _data;
+    this.chartType = _chartType;
 
     this.initVis();
 };
 
 LineVis.prototype.initVis = function() {
     var vis = this;
-    vis.margin = {top: 40, right: 100, bottom: 50, left: 50};
+    vis.margin = {top: 40, right: 0, bottom: 50, left: 30};
 
     vis.width = $("#" + vis.parentElement).width() - vis.margin.left - vis.margin.right;
-    vis.height = 250 - vis.margin.top - vis.margin.bottom;
+    vis.height = 170 - vis.margin.top - vis.margin.bottom;
 
 
     // SVG drawing area
@@ -25,7 +26,7 @@ LineVis.prototype.initVis = function() {
     vis.xScale = d3.scaleTime()
         .range([0, vis.width])
         .domain(d3.extent(vis.data, function(d) {
-            return d.time;
+            return d.date;
         }));
 
     vis.yScale = d3.scaleLinear()
@@ -37,8 +38,7 @@ LineVis.prototype.initVis = function() {
 
     vis.yAxis = d3.axisLeft()
         .scale(vis.yScale)
-        .tickFormat(d3.format('.0%'))
-        .ticks(5);
+        .ticks(4);
 
     vis.svg.append("g")
         .attr("class", "x-axis axis")
@@ -49,15 +49,10 @@ LineVis.prototype.initVis = function() {
     vis.svg.append("g")
         .attr("class", "y-axis axis");
 
-//color domain
-    vis.colorPalette = d3.scaleOrdinal()
-        .range(crimeColorRange)
-        .domain(crimeDomain);
-
 // draw line
     vis.line = d3.line()
-        .x(function(d){ return vis.xScale(d.time);})
-        .y(function(d){return vis.yScale(d.crime);})
+        .x(function(d){ return vis.xScale(d.date);})
+        .y(function(d){return vis.yScale(d.value);})
         .curve(d3.curveLinear);
 
     d3.select("#" + vis.parentElement).select("svg").append("rect")
@@ -84,20 +79,19 @@ LineVis.prototype.initVis = function() {
         .style('font-weight', 'bold')
         .text('');
 
-    crimeDomain.forEach(function(d, i) {
-        vis.svg.append('text')
-        .attr('id', 'crime-tooltip-label-' + d.charAt(0))
+    vis.svg.append('text')
+        .attr('id', 'crime-tooltip-label-' + vis.chartType)
+        .attr('class', 'crime-tooltip-label')
         .attr('x', 0)
-        .attr('y', 30 + 15*i)
-        .attr('fill',vis.colorPalette(d))
+        .attr('y', 30)
         .text('');
-    });
 
     vis.svg.append('text')
-        .attr('class', 'chart-footnote')
+        .attr('class', 'axis-label')
+        //.attr('transform', "translate(" + vis.margin.left + "," + vis.margin.top + "), rotate(270)")
         .attr('x', 0)
-        .attr('y', vis.height + 40)
-        .text('*90-Day rolling average as a percentage of maximum value');
+        .attr('y', -10)
+        .text(vis.chartType);
 
     vis.wrangleData();
 
@@ -108,17 +102,16 @@ LineVis.prototype.wrangleData = function() {
 
     vis.displayData = vis.data;
     vis.displayData.forEach(function(d) {
-       d.crime = d['crime' + selectedRadius];
+       d.value = d[selectedCrimeType + ' - ' + vis.chartType];
     });
 
-    vis.yScale.domain([0, d3.max(vis.displayData, function(d) {
-            return d.crime;
-        })]);
+    vis.displayData = vis.displayData.filter(function(d) {
+        return d.value != null;
+    });
 
-    vis.displayData = d3.nest()
-        .key(function(d) { return d.crimeType; })
-        .sortKeys(d3.ascending)
-        .entries(vis.displayData);
+    vis.yScale.domain(d3.extent(vis.displayData, function(d) {
+            return d.value;
+        }));
 
     vis.updateVis();
 
@@ -129,48 +122,17 @@ LineVis.prototype.updateVis = function() {
     var vis = this;
 
     //draw line
-    var crimeLine = vis.svg.selectAll(".crime-line")
-        .data(vis.displayData);
+    var crimeLine = vis.svg.selectAll(".crime-line-" + vis.chartType)
+        .data([vis.displayData]);
 
     crimeLine.enter().append("path")
-        .attr("class", "crime-line")
+        .attr("class", "crime-line crime-line-" + vis.chartType)
         .merge(crimeLine)
         .transition()
         .duration(1000)
-        .attr("d", function(d) {
-            return vis.line(d.values);
-        })
-        .style("stroke", function(d){
-           return vis.colorPalette(d.key);
-        });
+        .attr("d", vis.line);
 
     crimeLine.exit().remove();
-
-    var lineLabel = vis.svg.selectAll(".crime-line-label")
-            .data(vis.displayData);
-
-    lineLabel.enter()
-        .append('text')
-        .attr('class', 'crime-line-label')
-        .merge(lineLabel)
-        .transition()
-        .duration(1000)
-        .attr('x', vis.width + 10)
-        .attr('y', function(d) {
-            if (selectedRadius != 'HalfMile' || d.key == 'Larceny') {
-                return vis.yScale(d.values[d.values.length - 1].crime);
-            } else {
-                return vis.yScale(d.values[d.values.length - 1].crime) + 10;
-            }
-        })
-        .attr('fill', function(d) {
-            return vis.colorPalette(d.key);
-        })
-        .text(function(d) {
-            return d.key;
-        });
-
-    lineLabel.exit().remove();
 
     var metroLine = vis.svg.selectAll(".expo-opening-line")
         .data([{time:d3.timeParse("%Y-%m-%d")("2016-05-20")}]);

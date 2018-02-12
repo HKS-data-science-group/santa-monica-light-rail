@@ -1,87 +1,88 @@
 
-var timeChartData;
-var timeVis;
-var selectedRadius = 'Full';
-var crimeDomain = ["Larceny", "All"];
-var crimeColorRange = ["#CD6737", "#e6c276"];
+var timeCharts;
+var selectedCrimeType = $( "input[name='crimeTypeRadios']:checked" ).val();
 
 queue()
     .defer(d3.csv, "data/timeline/timeline-data.csv")
     .await(function(error, timeData){
 
-    timeChartData = [];
+        var number_column_headers = Object.keys(timeData[0]).slice(1);
 
-    timeData.forEach(function(d){
+        timeData.forEach(function(d) {
+            d.date = d3.timeParse("%Y-%m-%d")(d.date);
 
-        crimeDomain.forEach(function(s) {
-            var dataElement = {};
-            dataElement.time = d3.timeParse("%Y-%m-%d")(d['Date Occurred']);
-           dataElement.crimeType = s;
-           dataElement.crimeFull = +d[s + ' - Full'];
-           dataElement.crimeHalfMile = +d[s + ' - HalfMile'];
-            dataElement.crimeOneMile = +d[s + ' - OneMile'];
-           
-           timeChartData.push(dataElement);
+            for (var column in number_column_headers) {
+                var column_name = number_column_headers[column];
+                if (d[column_name] == "") {
+                    d[column_name] = null;
+                } else {
+                    d[column_name] = +d[column_name];
+                }
+            }
+
         });
 
+        var actualChart = new LineVis('timeline-chart-actual', timeData, 'actual');
+        var trendChart = new LineVis('timeline-chart-trend', timeData, 'trend');
+        var seasonalChart = new LineVis('timeline-chart-seasonal', timeData, 'seasonal');
+        timeCharts = [actualChart, trendChart, seasonalChart];
 
-    });
-
-    timeChartData.sort(function(a, b) {
-      return a.time - b.time;
-    });
-
-    timeVis = new LineVis("timeline-chart", timeChartData);
-
-    geographySliderMove();
 
     });
 
 function lineToolTipShow() {
 
-    var bisectDate = d3.bisector(function(d) { return d.time; }).left;
+    var bisectDate = d3.bisector(function(d) { return d.date; }).left;
 
-    var x0 = timeVis.xScale.invert(d3.mouse(this)[0]);
-    
-    timeVis.lineToolTip
-      .attr('x1', timeVis.xScale(x0))
-      .attr('x2', timeVis.xScale(x0))
-      .attr('stroke', '#09091a');
+    var leftPosition = d3.mouse(this)[0];
 
-    timeVis.lineToolTipText
-      .attr('x', timeVis.xScale(x0) + 5)
-      .text(d3.timeFormat('%B %Y')(x0));
+    timeCharts.forEach(function(chart){
 
-    timeVis.displayData.forEach(function(d, i) {
-        var i = bisectDate(d.values, x0, 1);
-        var d0 = d.values[i - 1];
-        var d1 = d.values[i];
-        var dA = x0 - d0.time > d1.time - x0 ? d1 : d0;
-        d3.select('#crime-tooltip-label-' + d.key.charAt(0))
-          .attr('x', timeVis.xScale(x0) + 5)
-          .text(d3.format(".0%")(dA.crime));
+        var x0 = chart.xScale.invert(leftPosition);
+
+        chart.lineToolTip
+          .attr('x1', chart.xScale(x0))
+          .attr('x2', chart.xScale(x0))
+          .attr('stroke', '#09091a');
+
+        chart.lineToolTipText
+          .attr('x', chart.xScale(x0) + 5)
+          .text(d3.timeFormat('%B %Y')(x0));
+
+        var i = bisectDate(chart.displayData, x0, 1);
+        var d0 = chart.displayData[i - 1];
+        var d1 = chart.displayData[i];
+        var dA = x0 - d0.date > d1.date - x0 ? d1 : d0;
+        d3.select('#crime-tooltip-label-' + chart.chartType)
+          .attr('x', chart.xScale(x0) + 5)
+          .text(d3.format(",.0f")(dA[selectedCrimeType + ' - ' + chart.chartType]));
+
     });
 
 };
 
 function lineToolTipHide() {
 
-    timeVis.lineToolTip
-      .attr('stroke', 'none');
+    timeCharts.forEach(function(chart){
 
-    timeVis.lineToolTipText
-      .text('');
+        chart.lineToolTip
+          .attr('stroke', 'none');
 
-    timeVis.displayData.forEach(function(d) {
-        d3.select('#crime-tooltip-label-' + d.key.charAt(0))
+        chart.lineToolTipText
           .text('');
+
+        d3.select('#crime-tooltip-label-' + chart.chartType)
+              .text('');
+
     });
 
 };
 
-var geographyValueMapping = {3:"HalfMile", 2:"OneMile", 1:"Full"};
+$( "input[name='crimeTypeRadios']" ).on("click", function() {
 
-function geographySliderMove() {
-    selectedRadius = geographyValueMapping[$('#geography-slider').slider("option", "value")];
-    timeVis.wrangleData();
-}
+    selectedCrimeType = $( "input[name='crimeTypeRadios']:checked" ).val();
+
+    timeCharts.forEach(function(chart) {
+        chart.wrangleData();
+    });
+});
