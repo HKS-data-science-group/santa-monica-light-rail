@@ -18,6 +18,7 @@ library(forecast)
 # Load in Incidents
 incidents <- read_csv("~/desktop/santa-monica-light-rail/Data/Police_Incidents_Final.csv")
 incidents$count = 1 # add count column for easy of aggregation
+incidents = mutate(incidents, line_open_io = ifelse(Line_Open == "True", 1, 0))
 head(incidents)
 ```
 
@@ -29,11 +30,16 @@ head(incidents)
 incidents.allByMonth <- incidents %>%
   group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
   summarise(total = n(),
+            lineOpen = mean(line_open_io),
             totalHalfMile = sum(count[half_mile=="1"]),
             totalHalfToOneMile = sum(count[half_mile == "0" && one_mile == "1"]),
+            violentHalfMile = sum(count[half_mile=="1" && `UCR Level 1` == "Violent"]),
+            violentHalfToOneMile = sum(count[half_mile == "0" && one_mile == "1" && `UCR Level 1` == "Violent"]),
             violent = sum(count[`UCR Level 1` == "Violent"]),
             nonviolent = sum(count[`UCR Level 1` == "Non-Violent"]),
             larceny = sum(count[`UCR Level 2` == "Larceny"]))
+
+head(incidents.allByMonth)
 
 ## Treatment
 # all incidents a half-mile from the rail line by month
@@ -90,11 +96,33 @@ plot(oneToHalfMile)
 ```
 
 ```{r}
-# Regressions Difference in Difference
+
+beforeAfterIncidents <- incidents.allByMonth[incidents.allByMonth$month >= "2015-05-20" & incidents.allByMonth$month <= "2017-05-20",]
+
+# Regressions
+# All Incidents
+# treatment regression
+treatReg <- lm(total ~  lineOpen + halfMile, data=regdf)
+# controlReg <- lm(totalHalfToOneMile ~  lineOpen, data=beforeAfterIncidents)
+
+print("Treatment")
+summary(treatReg)
+
+# print("Control")
+# summary(controlReg)
 ```
 
 ```{r}
+# All Incidents
+# treatment regression
+violentTreatReg <- lm(violent ~  lineOpen, data=beforeAfterIncidents)
+violentControlReg <- lm(violentHalfToOneMile ~  lineOpen, data=beforeAfterIncidents)
 
+print("Treatment")
+summary(violentTreatReg)
+
+print("Control")
+summary(violentControlReg)
 ```
 library(TTR)
 tsIncidentsByDay = ts(incidents.allByDay$`count`, frequency=365, start(c(2006,1)))
