@@ -110,3 +110,20 @@ body {
   fill: none;
   pointer-events: all;
 }
+
+.member-profile {
+    text-align: center;
+    display: inline-block;
+    margin: 20px;
+}
+
+.member-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
+}
+
+.data-science-logo {
+    color: #A51C30;
+    font-size: 40px;
+}
