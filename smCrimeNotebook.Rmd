@@ -32,9 +32,29 @@ incidents.allByMonth <- incidents %>%
   summarise(total = n(),
             lineOpen = mean(line_open_io),
             totalHalfMile = sum(count[half_mile=="1"]),
-            totalHalfToOneMile = sum(count[half_mile == "0" && one_mile == "1"]),
-            violentHalfMile = sum(count[half_mile=="1" && `UCR Level 1` == "Violent"]),
-            violentHalfToOneMile = sum(count[half_mile == "0" && one_mile == "1" && `UCR Level 1` == "Violent"]),
+            totalHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1"]),
+            violentHalfMile = sum(count[half_mile=="1" & `UCR Level 1` == "Violent"]),
+            violentHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1" & `UCR Level 1` == "Violent"]),
+            violent = sum(count[`UCR Level 1` == "Violent"]),
+            nonviolent = sum(count[`UCR Level 1` == "Non-Violent"]),
+            larceny = sum(count[`UCR Level 2` == "Larceny"]))
+
+incidents.allByDay <- incidents %>%
+  group_by(`Date Occurred`) %>% 
+  summarise(total = n(),
+            lineOpen = mean(line_open_io),
+            totalHalfMile = sum(count[half_mile=="1"]),
+            totalHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1"]),
+            totalNotHalfMile = sum(count[half_mile == 0]),
+            violentHalfMile = sum(count[half_mile ==1 & `UCR Level 1` == "Violent"]),
+            violentHalfToOneMile = sum(count[half_mile == 0 & one_mile == 1 & `UCR Level 1` == "Violent"]),
+            violentNotHalfMile = sum(count[half_mile != 1 & `UCR Level 1` == "Violent"]),
+            nonviolentHalfMile = sum(count[half_mile=="1" & `UCR Level 1` == "Non-Violent"]),
+            nonviolentHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1" & `UCR Level 1` == "Non-Violent"]),
+            nonviolentNotHalfMile = sum(count[half_mile=="0"]),
+            larcenyHalfMile = sum(count[half_mile=="1" & `UCR Level 2` == "Larceny"]),
+            larcenyHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1" & `UCR Level 2` == "Larceny"]),
+            larcenyNotHalfMile = sum(count[half_mile=="0" & `UCR Level 2` == "Larceny"]),
             violent = sum(count[`UCR Level 1` == "Violent"]),
             nonviolent = sum(count[`UCR Level 1` == "Non-Violent"]),
             larceny = sum(count[`UCR Level 2` == "Larceny"]))
@@ -97,32 +117,69 @@ plot(oneToHalfMile)
 
 ```{r}
 
-beforeAfterIncidents <- incidents.allByMonth[incidents.allByMonth$month >= "2015-05-20" & incidents.allByMonth$month <= "2017-05-20",]
+# beforeAfterIncidents <- incidents.allByMonth[incidents.allByMonth$month >= "2015-05-20" & incidents.allByMonth$month <= "2017-05-20",]
 
 # Regressions
 # All Incidents
 # treatment regression
-treatReg <- lm(total ~  lineOpen + halfMile, data=regdf)
+# treatReg <- lm(total ~  lineOpen + halfMile, data=regdf)
 # controlReg <- lm(totalHalfToOneMile ~  lineOpen, data=beforeAfterIncidents)
 
-print("Treatment")
-summary(treatReg)
+# print("Treatment")
+# summary(treatReg)
 
 # print("Control")
 # summary(controlReg)
+
+beforeIncidents <- incidents.allByDay[incidents.allByDay$`Date Occurred` >= "2015-05-20" & incidents.allByDay$`Date Occurred` < "2016-05-20",]
+
+afterIncidents <- incidents.allByDay[incidents.allByDay$`Date Occurred` >= "2016-05-20" & incidents.allByDay$`Date Occurred` <= "2017-05-20",]
+
+
 ```
 
 ```{r}
 # All Incidents
 # treatment regression
-violentTreatReg <- lm(violent ~  lineOpen, data=beforeAfterIncidents)
-violentControlReg <- lm(violentHalfToOneMile ~  lineOpen, data=beforeAfterIncidents)
+# violentTreatReg <- lm(violent ~  lineOpen, data=beforeAfterIncidents)
+# violentControlReg <- lm(violentHalfToOneMile ~  lineOpen, data=beforeAfterIncidents)
 
-print("Treatment")
-summary(violentTreatReg)
+# Paired T-Test, Balanced
+print("TOTAL")
+t.test(beforeIncidents$total,afterIncidents$total, paired=TRUE)
+print("VIOLENT")
+t.test(beforeIncidents$violent,afterIncidents$violent, paired=TRUE)
+print("NON-VIOLENT")
+t.test(beforeIncidents$nonviolent,afterIncidents$nonviolent, paired=TRUE)
+print("LARCENY")
+t.test(beforeIncidents$larceny,afterIncidents$larceny, paired=TRUE)
 
-print("Control")
-summary(violentControlReg)
+print("TOTAL HALF MILE")
+t.test(beforeIncidents$totalHalfMile,afterIncidents$totalHalfMile, paired=TRUE)
+print("VIOLENT HALF MILE")
+t.test(beforeIncidents$violentHalfMile,afterIncidents$violentHalfMile, paired=TRUE)
+print("NON-VIOLENT HALF MILE")
+t.test(beforeIncidents$nonviolentHalfMile,afterIncidents$nonviolentHalfMile, paired=TRUE)
+print("LARCENY HALF MILE")
+t.test(beforeIncidents$larcenyHalfMile,afterIncidents$larcenyHalfMile, paired=TRUE)
+
+print("TOTAL ONE TO HALF MILE")
+t.test(beforeIncidents$totalHalfToOneMile,afterIncidents$totalHalfToOneMile, paired=TRUE)
+print("VIOLENT ONE TO HALF MILE")
+t.test(beforeIncidents$violentHalfToOneMile,afterIncidents$violentHalfToOneMile, paired=TRUE)
+print("NON-VIOLENT ONE TO HALF MILE")
+t.test(beforeIncidents$nonviolentHalfToOneMile,afterIncidents$nonviolentHalfToOneMile, paired=TRUE)
+print("LARCENY ONE TO HALF MILE")
+t.test(beforeIncidents$larcenyHalfToOneMile,afterIncidents$larcenyHalfToOneMile, paired=TRUE)
+
+print("TOTAL NOT HALF MILE")
+t.test(beforeIncidents$totalNotHalfMile,afterIncidents$totalNotHalfMile, paired=TRUE)
+print("VIOLENT NOT HALF MILE")
+t.test(beforeIncidents$violentHalfMile,afterIncidents$violentNotHalfMile, paired=TRUE)
+print("NON-VIOLENT NOT HALF MILE")
+t.test(beforeIncidents$nonviolentNotHalfMile,afterIncidents$nonviolentNotHalfMile, paired=TRUE)
+print("LARCENY NOT HALF MILE")
+t.test(beforeIncidents$larcenyNotHalfMile,afterIncidents$larcenyNotHalfMile, paired=TRUE)
 ```
 library(TTR)
 tsIncidentsByDay = ts(incidents.allByDay$`count`, frequency=365, start(c(2006,1)))
