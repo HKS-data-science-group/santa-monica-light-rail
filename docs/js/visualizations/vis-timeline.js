@@ -174,7 +174,5 @@ LineVis.prototype.updateVis = function() {
     metroLineLabel.exit().remove();
 
     vis.svg.select(".y-axis").transition().duration(1000).call(vis.yAxis);
-    
+
 };
-
-

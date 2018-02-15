@@ -127,3 +127,9 @@ body {
     color: #A51C30;
     font-size: 40px;
 }
+
+/* Styles for map */
+#map {
+  width: 100%;
+  height: 600px;
+}
