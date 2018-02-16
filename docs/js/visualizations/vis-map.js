@@ -14,7 +14,7 @@ d3.queue()
   .await(makeMyMap);
 */
 
-d3.json('./data/map/2640_dissolve.geojson').then(function(data) {
+d3.json('./data/map/2640_dissolve.geojson', function(data) {
   console.log(data);
   L.geoJSON(data).addTo(mymap);
 });
