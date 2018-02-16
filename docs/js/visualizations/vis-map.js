@@ -7,7 +7,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1IjoiYnJpYW5obyIsImEiOiJjamRwNWpnM2owYnV0MnJvNG04N2NibGM1In0.BNR4X5tmi6eTuVQg4L20jA'
 }).addTo(mymap);
 
-/*
+/* IF WE WANT TO STREAM IN GEOMETETRY FROM DATA WITH D3
 var svg = d3.select(mymap.getPanes().overlayPane).append("svg");
 var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
@@ -24,9 +24,40 @@ var transform = d3.geoTransform({point: projectStream});
 var path = d3.geoPath().projection(transform);
 */
 
+function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 1,
+        opacity: 1,
+        dashArray: '',
+        fillOpacity: 1
+    });
+
+    if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+        layer.bringToFront();
+    }
+}
+
+function resetHighlight(e) {
+    geojson.resetStyle(e.target);
+}
+
+var geojson;
+
+function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+}
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        click: zoomToFeature
+    });
+}
+
 color = d3.scaleSequential(d3.interpolateGreens).domain([1,10]);
-      // .interpolate(d3.interpolateHcl)
-      // .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);
 
 d3.queue()
   .defer(d3.json, "./data/map/2640_dissolve.geojson")
@@ -38,14 +69,6 @@ d3.queue()
 function makeMyMap(error, half, mile, grid, after, before){
   if (error) throw error;
 
-  L.geoJSON(after, {
-    style: function(feature) {
-      if (feature.properties.count == 0) { return {opacity: 0, fillOpacity: 0};}
-      else { return {fillColor : color(feature.properties.count), fillOpacity: .8, opacity: 0, color: color(feature.properties.count)}; };
-
-      }
-  }).addTo(mymap);
-
   var outlineStyle = {
       "fillOpacity": 0,
       "weight": 2,
@@ -54,9 +77,18 @@ function makeMyMap(error, half, mile, grid, after, before){
 
   L.geoJSON(half, {style: outlineStyle}).addTo(mymap);
   L.geoJSON(mile, {style: outlineStyle}).addTo(mymap);
-  // L.geoJSON(before).addTo(mymap);
 
-/*
+  geojson = L.geoJSON(after, {
+    style: function(feature) {
+      if (feature.properties.count == 0) { return {opacity: 0, fillOpacity: 0}; }
+      else { return {fillColor : color(feature.properties.count), fillOpacity: .5, opacity: 0, color: color(feature.properties.count)}; };
+      },
+    onEachFeature: onEachFeature}).addTo(mymap);
+
+  // L.geoJSON(before).addTo(mymap);
+};
+
+/* * IF WE WANT TO STREAM IN GEOMETETRY FROM DATA WITH D3
   var rectangles = g.selectAll("rectangle").data(grid);
 
   rectangles.enter()
@@ -65,10 +97,13 @@ function makeMyMap(error, half, mile, grid, after, before){
     .attr("width", 5)
     .attr("x", function(d) { return projectPoint(d.Latitude_round, d.Longitude_round).x; })
     .attr("y", function(d) { return projectPoint(d.Latitude_round, d.Longitude_round).y; });
-*/
 };
+*/
 
-/*
+
+
+
+/* IF WE WANT TO STREAM IN GEOMETETRY FROM DATA WITH D3
 function update() {
   console.log("update");
     var bounds = path.bounds(grid),
