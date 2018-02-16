@@ -3,7 +3,7 @@ var mymap = L.map('map').setView([34.011271, -118.489240], 13);
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 18,
-    id: 'mapbox.streets',
+    id: 'mapbox.light',
     accessToken: 'pk.eyJ1IjoiYnJpYW5obyIsImEiOiJjamRwNWpnM2owYnV0MnJvNG04N2NibGM1In0.BNR4X5tmi6eTuVQg4L20jA'
 }).addTo(mymap);
 
@@ -100,9 +100,6 @@ function makeMyMap(error, half, mile, grid, after, before){
 };
 */
 
-
-
-
 /* IF WE WANT TO STREAM IN GEOMETETRY FROM DATA WITH D3
 function update() {
   console.log("update");
@@ -112,12 +109,12 @@ function update() {
 
     var buffer = 50;
 
-    svg .attr("width", bottomRight[0] - topLeft[0] + (buffer * 2))
-        .attr("height", bottomRight[1] - topLeft[1] + (buffer * 2))
-        .style("left", (topLeft[0] - buffer) + "px")
-        .style("top", (topLeft[1] - buffer) + "px");
+    svg.attr("width", bottomRight[0] - topLeft[0] + (buffer * 2))
+      .attr("height", bottomRight[1] - topLeft[1] + (buffer * 2))
+      .style("left", (topLeft[0] - buffer) + "px")
+      .style("top", (topLeft[1] - buffer) + "px");
 
-    g   .attr("transform", "translate(" + (-topLeft[0] + buffer) + "," + (-topLeft[1] + buffer) + ")");
+    g.attr("transform", "translate(" + (-topLeft[0] + buffer) + "," + (-topLeft[1] + buffer) + ")");
 
     circles
         .attr("x", function(d) { return projectPoint(d.Latitude_round, d.Longitude_round).x; })
