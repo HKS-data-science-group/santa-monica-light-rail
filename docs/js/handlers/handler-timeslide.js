@@ -1,31 +1,107 @@
 
 var timeCharts;
 var selectedCrimeType = $( "input[name='crimeTypeRadios']:checked" ).val();
+var trendModels = ["original", "SARIMA", "Prophet"];
+
+var lineColorMapping = {
+    "all": "#CD6737",
+    "larceny": "#CD6737",
+    "original": "#CD6737",
+    "SARIMA": "#4a0073",
+    "Prophet": "#e6c276"
+};
 
 queue()
     .defer(d3.csv, "data/timeline/timeline-data.csv")
-    .await(function(error, timeData){
+    .defer(d3.csv, "data/trend_analysis/trend_prediction.csv")
+    .await(function(error, timeData, trendData){
 
         var number_column_headers = Object.keys(timeData[0]).slice(1);
 
+        var actualChartData = [];
+        var trendChartData = [];
+        var seasonalChartData = [];
         timeData.forEach(function(d) {
-            d.date = d3.timeParse("%Y-%m-%d")(d.date);
+            var date = d3.timeParse("%Y-%m-%d")(d.date);
 
-            for (var column in number_column_headers) {
-                var column_name = number_column_headers[column];
-                if (d[column_name] == "") {
-                    d[column_name] = null;
-                } else {
-                    d[column_name] = +d[column_name];
+            number_column_headers.forEach(function(c) {
+                var crimeType = c.split(" - ")[0];
+                var decomposeType = c.split(" - ")[1];
+
+                if (d[c] != "") {
+                    var val = +d[c];
+
+                    switch (decomposeType) {
+                        case val === null:
+                            break;
+                        case "actual":
+                            actualChartData.push({date:date, value:val, model:crimeType, decomposeType: decomposeType});
+                            break;
+                        case "trend":
+                            trendChartData.push({date:date, value:val, model:crimeType, decomposeType: decomposeType});
+                            break;
+                        case "seasonal":
+                            seasonalChartData.push({date:date, value:val, model:crimeType, decomposeType: decomposeType});
+                            break;
+                    }
                 }
-            }
+
+            });
+
 
         });
 
-        var actualChart = new LineVis('timeline-chart-actual', timeData, 'actual');
-        var trendChart = new LineVis('timeline-chart-trend', timeData, 'trend');
-        var seasonalChart = new LineVis('timeline-chart-seasonal', timeData, 'seasonal');
+        actualChartData = d3.nest()
+            .key(function(d) { return d.model; })
+            .sortKeys(d3.ascending)
+            .entries(actualChartData);
+
+        trendChartData = d3.nest()
+            .key(function(d) { return d.model; })
+            .sortKeys(d3.ascending)
+            .entries(trendChartData);
+
+        seasonalChartData = d3.nest()
+            .key(function(d) { return d.model; })
+            .sortKeys(d3.ascending)
+            .entries(seasonalChartData);
+
+        var actualChart = new LineVis('timeline-chart-actual', actualChartData, "actual");
+        var trendChart = new LineVis('timeline-chart-trend', trendChartData, "trend");
+        var seasonalChart = new LineVis('timeline-chart-seasonal', seasonalChartData, "seasonal");
         timeCharts = [actualChart, trendChart, seasonalChart];
+
+        var trendChartData = [];
+        var sarimaDiffChartData = [];
+        var prophetDiffChartData = [];
+        trendData.forEach(function(d, i) {
+            var date = d3.timeParse("%m/%d/%Y")(d.ds);
+
+            var sarVal = +d.original - +d.SARIMA;
+            sarimaDiffChartData.push({date:date, value:sarVal});
+
+            var prophetVal = +d.original - +d.Prophet;
+            prophetDiffChartData.push({date:date, value:prophetVal});
+
+            trendModels.forEach(function(m) {
+                var val = +d[m];
+                if (isNaN(val)) {
+                    trendChartData.push({date:date, model:m , value:null});
+                } else {
+                    trendChartData.push({date:date, model:m, value:val});
+                }
+
+            });
+        });
+
+        trendChartData = d3.nest()
+            .key(function(d) { return d.model; })
+            .sortKeys(d3.ascending)
+            .entries(trendChartData);
+
+        var trendChart = new LineVis('trend-forecast-chart', trendChartData, "forecast");
+        var sarimaDiffChart = new AreaVis('sarima-diff-chart', sarimaDiffChartData, "SARIMA")
+        var prophetDiffChart = new AreaVis('prophet-diff-chart', prophetDiffChartData, "Prophet")
 
 
     });
