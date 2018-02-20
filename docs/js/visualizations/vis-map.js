@@ -62,29 +62,30 @@ color = d3.scaleSequential(d3.interpolateGreens).domain([1,10]);
 d3.queue()
   .defer(d3.json, "./data/map/2640_dissolve.geojson")
   .defer(d3.json, "./data/map/5280_dissolve.geojson")
+  .defer(d3.json, "./data/map/grid_big_join.geojson")
   .defer(d3.json, "./data/map/heatmap_after_grid.geojson")
   .defer(d3.json, "./data/map/heatmap_before_grid.geojson")
   .await(makeMyMap);
 
-function makeMyMap(error, half, mile, grid, after, before){
+function makeMyMap(error, half, mile, new_grid, grid, after, before){
   if (error) throw error;
 
   var outlineStyle = {
       "fillOpacity": 0,
       "weight": 2,
-      "color": "black"
+      "color": "black",
+      "interactive": "false"
   };
 
-  L.geoJSON(half, {style: outlineStyle}).addTo(mymap);
-  L.geoJSON(mile, {style: outlineStyle}).addTo(mymap);
-
-  geojson = L.geoJSON(after, {
+  geojson = L.geoJSON(new_grid, {
     style: function(feature) {
       if (feature.properties.count == 0) { return {opacity: 0, fillOpacity: 0}; }
       else { return {fillColor : color(feature.properties.count), fillOpacity: .5, opacity: 0, color: color(feature.properties.count)}; };
       },
     onEachFeature: onEachFeature}).addTo(mymap);
 
+    L.geoJSON(half, {style: outlineStyle}).addTo(mymap);
+    L.geoJSON(mile, {style: outlineStyle}).addTo(mymap);
   // L.geoJSON(before).addTo(mymap);
 };
 
