@@ -1,4 +1,17 @@
-var mymap = L.map('map').setView([34.011271, -118.489240], 13);
+var mymap = L.map('map', {
+  center: [34.035760, -118.483196],
+  zoom: 13,
+  maxBounds: L.latLngBounds([33.97, -118.58], [34.12, -118.38])
+});
+
+// ).setView([34.011271, -118.489240], 13);
+//
+// var southWest = L.latLng(33.968332, -118.569481),
+//     northEast = L.latLng(34.099144, -118.393843);
+//
+// var bounds = L.latLngBounds(southWest, northEast);
+//
+// map.setMaxBounds(bounds);
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -50,11 +63,14 @@ function zoomToFeature(e) {
 }
 
 function onEachFeature(feature, layer) {
+    if (feature.properties.P_Value == 0) { return; }
+    else {
     layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
         click: zoomToFeature
     });
+  }
 }
 
 color = d3.scaleSequential(d3.interpolateGreens).domain([0,1]);
@@ -82,7 +98,7 @@ function makeMyMap(error, half, mile, new_grid, grid, after, before){
       if (feature.properties.P_Value == 0) { return {opacity: 0, fillOpacity: 0}; }
       else { return {fillColor : color(feature.properties.P_Value), fillOpacity: .5, opacity: 0, color: color(feature.properties.P_Value)}; };
       },
-    onEachFeature: onEachFeature}).addTo(mymap);
+    onEachFeature: onEachFeature }).addTo(mymap);
 
     L.geoJSON(half, {style: outlineStyle}).addTo(mymap);
     L.geoJSON(mile, {style: outlineStyle}).addTo(mymap);

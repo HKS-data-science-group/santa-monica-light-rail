@@ -2,20 +2,22 @@
 /* YOUR CSS STYLES */
 
 body {
-    font-family: 'Lato',sans-serif;
-    color: black;
-    background-color: #dddddd;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    color: #333333;
+    background-color: #ffffff;
 }
 
 .section-header {
-    font-family: 'Titillium Web', sans-serif;
+    font-family: 'Roboto Slab', serif;
     opacity:.8;
-    color: black;
+    color: #333333;
     font-size: 40px;
     text-align: left;
-    font-weight: bold;
-    padding-left: 15px;
+    font-weight: normal;
+    margin-top: 15px;
     margin-bottom: 15px;
+    /* padding-left: 15px; */
     padding-right: 15px;
 }
 
