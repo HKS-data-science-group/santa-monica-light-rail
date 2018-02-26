@@ -12,13 +12,25 @@ body {
     font-family: 'Roboto Slab', serif;
     opacity:.8;
     color: #333333;
-    font-size: 40px;
+    font-size: 30px;
     text-align: left;
     font-weight: normal;
     margin-top: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 45px;
     /* padding-left: 15px; */
     padding-right: 15px;
+    position: relative;
+}
+
+.section-header:after {
+  content:"";
+  background: #333;
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  height: 3px;
+  width: 75px;
+  /* border-bottom: 1px solid black; */
 }
 
 .explanatory-text {
