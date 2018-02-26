@@ -57,7 +57,7 @@ function onEachFeature(feature, layer) {
     });
 }
 
-color = d3.scaleSequential(d3.interpolateGreens).domain([1,10]);
+color = d3.scaleSequential(d3.interpolateGreens).domain([0,1]);
 
 d3.queue()
   .defer(d3.json, "./data/map/2640_dissolve.geojson")
@@ -79,8 +79,8 @@ function makeMyMap(error, half, mile, new_grid, grid, after, before){
 
   geojson = L.geoJSON(new_grid, {
     style: function(feature) {
-      if (feature.properties.count == 0) { return {opacity: 0, fillOpacity: 0}; }
-      else { return {fillColor : color(feature.properties.count), fillOpacity: .5, opacity: 0, color: color(feature.properties.count)}; };
+      if (feature.properties.P_Value == 0) { return {opacity: 0, fillOpacity: 0}; }
+      else { return {fillColor : color(feature.properties.P_Value), fillOpacity: .5, opacity: 0, color: color(feature.properties.P_Value)}; };
       },
     onEachFeature: onEachFeature}).addTo(mymap);
 
@@ -99,9 +99,7 @@ function makeMyMap(error, half, mile, new_grid, grid, after, before){
     .attr("x", function(d) { return projectPoint(d.Latitude_round, d.Longitude_round).x; })
     .attr("y", function(d) { return projectPoint(d.Latitude_round, d.Longitude_round).y; });
 };
-*/
 
-/* IF WE WANT TO STREAM IN GEOMETETRY FROM DATA WITH D3
 function update() {
   console.log("update");
     var bounds = path.bounds(grid),
