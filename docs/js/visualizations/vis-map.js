@@ -115,10 +115,10 @@ function makeMyMap(error, half, mile, grid, line, stations){
     L.geoJSON(line, {style: outlineStyle}).addTo(mymap);
 
     L.geoJSON(stations, {
-    pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, geojsonMarkerOptions);
-    }
-}).addTo(mymap);
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, geojsonMarkerOptions);
+        }
+      }).addTo(mymap);
 
     L.geoJSON(half, {style: outlineStyle}).addTo(mymap);
     L.geoJSON(mile, {style: outlineStyle}).addTo(mymap);
