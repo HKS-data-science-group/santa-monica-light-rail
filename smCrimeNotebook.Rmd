@@ -39,10 +39,24 @@ incidents.allByMonth <- incidents %>%
             nonviolent = sum(count[`UCR Level 1` == "Non-Violent"]),
             larceny = sum(count[`UCR Level 2` == "Larceny"]))
 
+incidents.allByMonthRedux <- incidents %>%
+  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
+  summarise(total = n(),
+            lineOpen = mean(line_open_io),
+            withinHalf = mean(half_mile),
+            totalHalfMile = sum(count[half_mile=="1"]),
+            totalHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1"]),
+            violentHalfMile = sum(count[half_mile=="1" & `UCR Level 1` == "Violent"]),
+            violentHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1" & `UCR Level 1` == "Violent"]),
+            violent = sum(count[`UCR Level 1` == "Violent"]),
+            nonviolent = sum(count[`UCR Level 1` == "Non-Violent"]),
+            larceny = sum(count[`UCR Level 2` == "Larceny"]))
+
 incidents.allByDay <- incidents %>%
   group_by(`Date Occurred`) %>% 
   summarise(total = n(),
             lineOpen = mean(line_open_io),
+            withinHalf = mean(half_mile),
             totalHalfMile = sum(count[half_mile=="1"]),
             totalHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1"]),
             totalNotHalfMile = sum(count[half_mile == 0]),
@@ -135,7 +149,6 @@ beforeIncidents <- incidents.allByDay[incidents.allByDay$`Date Occurred` >= "201
 
 afterIncidents <- incidents.allByDay[incidents.allByDay$`Date Occurred` >= "2016-05-20" & incidents.allByDay$`Date Occurred` <= "2017-05-20",]
 
-
 ```
 
 ```{r}
@@ -181,127 +194,8 @@ t.test(beforeIncidents$nonviolentNotHalfMile,afterIncidents$nonviolentNotHalfMil
 print("LARCENY NOT HALF MILE")
 t.test(beforeIncidents$larcenyNotHalfMile,afterIncidents$larcenyNotHalfMile, paired=TRUE)
 ```
-library(TTR)
-tsIncidentsByDay = ts(incidents.allByDay$`count`, frequency=365, start(c(2006,1)))
-incidentsDecomposed = decompose(tsIncidentsByDay)
-plot(incidentsDecomposed)
-
-tsTotalIncidentsByMonth = ts(incidents.allByMonth$`count`, frequency=12, start(c(2006,1)))
-totalIncidentsDecomposed = decompose(tsTotalIncidentsByMonth)
-plot(totalIncidentsDecomposed)
-
-# all incidents aggregated by day
-incidents.allByDay <- incidents %>%
-  group_by(`Date Occurred`) %>%
-  summarise(count=n())
-  
-# all incidents between one mile and a half-mile from the rail line by day
-incidents.oneToHalfMileByDay <- incidents %>%
-  filter(half_mile == "0" && one_mile == "1") %>%
-  group_by(`Date Occurred`) %>% 
-  summarise(count=n())
-  
-# all incidents within half mile aggregated by day
-incidents.halfMileByDay <- incidents %>%
-  filter(half_mile == "1") %>%
-  group_by(`Date Occurred`) %>% 
-  summarise(count=n())
-## Non Violent
-
-# all non violent incidents within half mile aggregated by month
-incidents.nvHalfMilebyMonth <- incidents %>%
-  filter(half_mile == "1" && `UCR Level 1` == "Non-Violent") %>%
-  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
-
-# all non-violent incidents aggregated by month
-incidents.nvAllByMonth <- incidents %>%
-  filter(`UCR Level 1` == "Non-Violent") %>%
-  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
-
-# all non-violent incidents aggregated by day
-incidents.nvAllByDay <- incidents %>%
-  filter(`UCR Level 1` == "Non-Violent") %>%
-  group_by(`Date Occurred`) %>%
-  summarise(count=n())
-
-# all non-violent incidents within half mile aggregated by day
-incidents.nvHalfMileByDay <- incidents %>%
-  filter(half_mile == "1" && `UCR Level 1` == "Non-Violent") %>%
-  group_by(`Date Occurred`) %>% 
-  summarise(count=n())
-
-# all non-violent incidents within half mile aggregated by month
-incidents.nvHalfMilebyMonth <- incidents %>%
-  filter(half_mile == "1" && `UCR Level 1` == "Non-Violent") %>%
-  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
-
-## Violent
-
-# all violent incidents within half mile aggregated by month
-incidents.vHalfMilebyMonth <- incidents %>%
-  filter(half_mile == "1" && `UCR Level 1` == "Violent") %>%
-  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
-
-# all  violent incidents aggregated by month
-incidents.vAllByMonth <- incidents %>%
-  filter(`UCR Level 1` == "Violent") %>%
-  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
-
-# all violent incidents aggregated by day
-incidents.vAllByDay <- incidents %>%
-  filter(`UCR Level 1` == "Violent") %>%
-  group_by(`Date Occurred`) %>%
-  summarise(count=n())
-
-# all violent incidents within half mile aggregated by day
-incidents.vHalfMileByDay <- incidents %>%
-  filter(half_mile == "1" && `UCR Level 1` == "Violent") %>%
-  group_by(`Date Occurred`) %>% 
-  summarise(count=n())
-
-# all violent incidents within half mile aggregated by month
-incidents.vHalfMilebyMonth <- incidents %>%
-  filter(half_mile == "1" && `UCR Level 1` == "Violent") %>%
-  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
-
-## Larceny
-
-# all larceny incidents within half mile aggregated by month
-incidents.larHalfMilebyMonth <- incidents %>%
-  filter(half_mile == "1" && `UCR Level 2` == "Larceny") %>%
-  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
-
-# all larceny incidents aggregated by month
-incidents.larAllByMonth <- incidents %>%
-  filter(`UCR Level 2` == "Larceny") %>%
-  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
-
-# all larceny incidents aggregated by day
-incidents.larAllByDay <- incidents %>%
-  filter(`UCR Level 2` == "Violent") %>%
-  group_by(`Date Occurred`) %>%
-  summarise(count=n())
-
-# all larceny incidents within half mile aggregated by day
-incidents.larHalfMileByDay <- incidents %>%
-  filter(half_mile == "1" && `UCR Level 2` == "Larceny") %>%
-  group_by(`Date Occurred`) %>% 
-  summarise(count=n())
-
-# all larceny incidents within half mile aggregated by month
-incidents.larHalfMilebyMonth <- incidents %>%
-  filter(half_mile == "1" && `UCR Level 2` == "Larceny") %>%
-  group_by(month=floor_date(`Date Occurred`, 'month')) %>% 
-  summarise(count=n())
-
-
-plot(incidents.allByMonth$count ~ incidents.allByMonth$month, xlab="Month", ylab="Number of Incidents", type="l")
-plot(incidents.allByDay$`count` ~ incidents.allByDay$`Date Occurred`, xlab="Month", ylab="Number of Incidents", type="l")
+```{r}
+filteredIncidents <- incidents.allByMonthRedux[incidents.allByMonthRedux$`month` >= "2015-05-20" & incidents.allByMonthRedux$`month` < "2017-05-20",]
+testLm <- lm(total ~ lineOpen*withinHalf, data=filteredIncidents)
+summary(testLm)
+```
