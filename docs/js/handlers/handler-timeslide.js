@@ -70,6 +70,9 @@ queue()
         var trendChart = new LineVis('timeline-chart-trend', trendChartData, "trend");
         var seasonalChart = new LineVis('timeline-chart-seasonal', seasonalChartData, "seasonal");
         timeCharts = [actualChart, trendChart, seasonalChart];
+        timeCharts.forEach(function(d) {
+            createToolTip(d);
+        });
 
         var trendChartData = [];
         var sarimaDiffChartData = [];
@@ -100,9 +103,8 @@ queue()
             .entries(trendChartData);
 
         var trendChart = new LineVis('trend-forecast-chart', trendChartData, "forecast");
-        var sarimaDiffChart = new AreaVis('sarima-diff-chart', sarimaDiffChartData, "SARIMA")
-        var prophetDiffChart = new AreaVis('prophet-diff-chart', prophetDiffChartData, "Prophet")
-
+        var sarimaDiffChart = new AreaVis('sarima-diff-chart', sarimaDiffChartData, "SARIMA");
+        var prophetDiffChart = new AreaVis('prophet-diff-chart', prophetDiffChartData, "Prophet");
 
     });
 
@@ -125,13 +127,15 @@ function lineToolTipShow() {
           .attr('x', chart.xScale(x0) + 5)
           .text(d3.timeFormat('%B %Y')(x0));
 
-        var i = bisectDate(chart.displayData, x0, 1);
-        var d0 = chart.displayData[i - 1];
-        var d1 = chart.displayData[i];
+        var data = chart.displayData[0].values;
+
+        var i = bisectDate(data, x0, 1);
+        var d0 = data[i - 1];
+        var d1 = data[i];
         var dA = x0 - d0.date > d1.date - x0 ? d1 : d0;
         d3.select('#crime-tooltip-label-' + chart.chartType)
           .attr('x', chart.xScale(x0) + 5)
-          .text(d3.format(",.0f")(dA[selectedCrimeType + ' - ' + chart.chartType]));
+          .text(d3.format(",.0f")(dA.value));
 
     });
 
@@ -162,3 +166,36 @@ $( "input[name='crimeTypeRadios']" ).on("click", function() {
         chart.wrangleData();
     });
 });
+
+function createToolTip(chart) {
+    chart.lineToolTip = chart.svg.append('line')
+        .attr('x1', 0)
+        .attr('x2', 0)
+        .attr('y1', chart.height)
+        .attr('y2', 5)
+        .attr('stroke', 'none')
+        .attr('stroke-width', '2px');
+
+    chart.lineToolTipText = chart.svg.append('text')
+        .attr('x', 0)
+        .attr('y', 15)
+        .attr('fill','#09091a')
+        .style('font-weight', 'bold')
+        .text('');
+
+    chart.svg.append('text')
+        .attr('id', 'crime-tooltip-label-' + chart.chartType)
+        .attr('class', 'crime-tooltip-label')
+        .attr('x', 0)
+        .attr('y', 30)
+        .text('');
+
+    d3.select("#" + chart.parentElement).select("svg").append("rect")
+        .attr("transform", "translate(" + chart.margin.left + "," + chart.margin.top + ")")
+        .attr("class", "overlay")
+        .attr("width", chart.width)
+        .attr("height", chart.height)
+        .on("mouseover", lineToolTipShow)
+        .on("mouseout", lineToolTipHide)
+        .on("mousemove", lineToolTipShow);
+}

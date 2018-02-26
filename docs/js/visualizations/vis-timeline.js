@@ -57,37 +57,6 @@ LineVis.prototype.initVis = function() {
         .y(function(d){return vis.yScale(d.value);})
         .curve(d3.curveLinear);
 
-    d3.select("#" + vis.parentElement).select("svg").append("rect")
-        .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")")
-        .attr("class", "overlay")
-        .attr("width", vis.width)
-        .attr("height", vis.height)
-        .on("mouseover", lineToolTipShow)
-        .on("mouseout", lineToolTipHide)
-        .on("mousemove", lineToolTipShow);
-
-    vis.lineToolTip = vis.svg.append('line')
-        .attr('x1', 0)
-        .attr('x2', 0)
-        .attr('y1', vis.height)
-        .attr('y2', 5)
-        .attr('stroke', 'none')
-        .attr('stroke-width', '2px');
-
-    vis.lineToolTipText = vis.svg.append('text')
-        .attr('x', 0)
-        .attr('y', 15)
-        .attr('fill','#09091a')
-        .style('font-weight', 'bold')
-        .text('');
-
-    vis.svg.append('text')
-        .attr('id', 'crime-tooltip-label-' + vis.chartType)
-        .attr('class', 'crime-tooltip-label')
-        .attr('x', 0)
-        .attr('y', 30)
-        .text('');
-
     if (vis.chartType != 'forecast') {
         vis.svg.append('text')
             .attr('class', 'axis-label')
