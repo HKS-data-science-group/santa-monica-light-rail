@@ -21,7 +21,7 @@
 			<div class="section-header">The Expo Line and Crime</div>
 			<div class="container">
 				<div class="col-md-1">
-						<img src="data/cover/expo-line.jpg"></img>
+
 				</div>
 			</div>
 		</section>
@@ -80,7 +80,26 @@
 		</section>
 
 		<section class="section">
-			<div class="section-header">Implications</div>
+			<div class="section-header">Forecasting Trends</div>
+			<div class="container">
+				<div class="col-md-5">
+					<div class="row explanatory-text">
+					</div>
+
+				</div>
+				<div class="col-md-7">
+					<div class="chart-title">
+						Forecasted Crimes Per Day
+					</div>
+
+					<div id="trend-forecast-chart">
+					</div>
+					<div id="sarima-diff-chart">
+					</div>
+					<div id="prophet-diff-chart">
+					</div>
+				</div>
+			</div>
 		</section>
 
 		<section class="section">
@@ -146,6 +165,7 @@
 
 	<script src="js/handlers/handler-timeslide.js"></script>
 	<script src="js/visualizations/vis-timeline.js"></script>
+	<script src="js/visualizations/vis-diffpath.js"></script>
 	<script src="js/visualizations/vis-map.js"></script>
 
 </body>

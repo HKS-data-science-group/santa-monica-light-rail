@@ -1,5 +1,5 @@
 
-LineVis = function(_parentElement, _data, _chartType){
+AreaVis = function(_parentElement, _data, _chartType){
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = [];
@@ -8,7 +8,7 @@ LineVis = function(_parentElement, _data, _chartType){
     this.initVis();
 };
 
-LineVis.prototype.initVis = function() {
+AreaVis.prototype.initVis = function() {
     var vis = this;
     vis.margin = {top: 40, right: 40, bottom: 50, left: 40};
 
@@ -25,11 +25,9 @@ LineVis.prototype.initVis = function() {
 
     vis.xScale = d3.scaleTime()
         .range([0, vis.width])
-        .domain([d3.min(vis.data, function(d) {
-            return d3.min(d.values, function(b) { return b.date; });
-        }), d3.max(vis.data, function(d) {
-            return d3.max(d.values, function(b) { return b.date; });
-        })]);
+        .domain(d3.extent(vis.data, function(d) {
+            return d.date;
+        }));
 
     vis.yScale = d3.scaleLinear()
         .rangeRound([vis.height, 0]);
@@ -52,9 +50,16 @@ LineVis.prototype.initVis = function() {
         .attr("class", "y-axis axis");
 
 // draw line
-    vis.line = d3.line()
+    vis.area = d3.area()
         .x(function(d){ return vis.xScale(d.date);})
-        .y(function(d){return vis.yScale(d.value);})
+        .y0(function (d) {
+            var val = Math.min(0, d.value);
+            return vis.yScale(val);
+        })
+        .y1(function(d){
+            var val = Math.max(0, d.value);
+            return vis.yScale(val);
+        })
         .curve(d3.curveLinear);
 
     d3.select("#" + vis.parentElement).select("svg").append("rect")
@@ -88,62 +93,47 @@ LineVis.prototype.initVis = function() {
         .attr('y', 30)
         .text('');
 
-    if (vis.chartType != 'forecast') {
-        vis.svg.append('text')
-            .attr('class', 'axis-label')
-            //.attr('transform', "translate(" + vis.margin.left + "," + vis.margin.top + "), rotate(270)")
-            .attr('x', 0)
-            .attr('y', -10)
-            .text(vis.chartType);
-    }
+    vis.svg.append('text')
+        .attr('class', 'axis-label')
+        //.attr('transform', "translate(" + vis.margin.left + "," + vis.margin.top + "), rotate(270)")
+        .attr('x', 0)
+        .attr('y', -10)
+        .text(vis.chartType + " difference");
 
     vis.wrangleData();
 
 };
 
-LineVis.prototype.wrangleData = function() {
+AreaVis.prototype.wrangleData = function() {
     var vis = this;
 
-    if (vis.chartType == "forecast") {
-        vis.displayData = vis.data;
-    } else {
-        vis.displayData = vis.data.filter(function(d) {
-            return d.key == selectedCrimeType;
-        });
-    }
+    vis.displayData = vis.data;
 
-
-    vis.yScale.domain([d3.min(vis.displayData, function(d) {
-        return d3.min(d.values, function(b) { return b.value; });
-    }), d3.max(vis.displayData, function(d) {
-        return d3.max(d.values, function(b) { return b.value; });
-    })]);
+    vis.yScale.domain(d3.extent(vis.displayData, function(d) {
+        return d.value;
+    }));
 
     vis.updateVis();
 
 };
 
 
-LineVis.prototype.updateVis = function() {
+AreaVis.prototype.updateVis = function() {
     var vis = this;
 
     //draw line
-    var crimeLine = vis.svg.selectAll(".chart-line-" + vis.chartType)
-        .data(vis.displayData);
+    var crimePath = vis.svg.selectAll(".chart-path-" + vis.chartType)
+        .data([vis.displayData]);
 
-    crimeLine.enter().append("path")
-        .attr("class", "chart-line chart-line-" + vis.chartType)
-        .merge(crimeLine)
+    crimePath.enter().append("path")
+        .attr("class", "chart-path chart-path-" + vis.chartType)
+        .merge(crimePath)
         .transition()
         .duration(1000)
-        .attr("d", function(d) {
-            return vis.line(d.values);
-        })
-        .attr("stroke", function(d) {
-            return lineColorMapping[d.key];
-        });
+        .attr("d", vis.area)
+        .attr("fill", lineColorMapping[vis.chartType]);
 
-    crimeLine.exit().remove();
+    crimePath.exit().remove();
 
     var metroLine = vis.svg.selectAll(".expo-opening-line")
         .data([{time:d3.timeParse("%Y-%m-%d")("2016-05-20")}]);
