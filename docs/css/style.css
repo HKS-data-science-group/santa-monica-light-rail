@@ -38,12 +38,14 @@ body {
 }
 
 .chart-title {
+    font-family: "Roboto Condensed";
     font-size: 25px;
     text-align: center;
-    font-weight: bold;
+    font-weight: 300;
 }
 
 .chart-footnote {
+    font-family: "Roboto Condensed";
     font-size: 10px;
 }
 
@@ -61,11 +63,13 @@ body {
 }
 
 .expo-opening-line-label {
+    font-family: "Roboto Condensed";
     text-anchor: end;
     font-style: italic;
 }
 
 .axis-label {
+    font-family: "Roboto Condensed";
     fill: black;
     font-size: 15px;
     font-weight: bold;
@@ -73,12 +77,12 @@ body {
 }
 
 .x-axis text {
-    font-family: 'Lato',sans-serif;
+    font-family: 'Roboto Condensed',sans-serif;
     font-size: 13px;
 }
 
 .y-axis text {
-    font-family: 'Lato',sans-serif;
+    font-family: 'Roboto Condensed',sans-serif;
     font-size: 13px;
 }
 
