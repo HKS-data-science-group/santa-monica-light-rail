@@ -65,7 +65,7 @@ incidents.allByDay <- incidents %>%
             violentNotHalfMile = sum(count[half_mile != 1 & `UCR Level 1` == "Violent"]),
             nonviolentHalfMile = sum(count[half_mile=="1" & `UCR Level 1` == "Non-Violent"]),
             nonviolentHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1" & `UCR Level 1` == "Non-Violent"]),
-            nonviolentNotHalfMile = sum(count[half_mile=="0"]),
+            nonviolentNotHalfMile = sum(count[half_mile=="0" & `UCR Level 1` == "Non-Violent"]),
             larcenyHalfMile = sum(count[half_mile=="1" & `UCR Level 2` == "Larceny"]),
             larcenyHalfToOneMile = sum(count[half_mile == "0" & one_mile == "1" & `UCR Level 2` == "Larceny"]),
             larcenyNotHalfMile = sum(count[half_mile=="0" & `UCR Level 2` == "Larceny"]),
@@ -188,7 +188,7 @@ t.test(beforeIncidents$larcenyHalfToOneMile,afterIncidents$larcenyHalfToOneMile,
 print("TOTAL NOT HALF MILE")
 t.test(beforeIncidents$totalNotHalfMile,afterIncidents$totalNotHalfMile, paired=TRUE)
 print("VIOLENT NOT HALF MILE")
-t.test(beforeIncidents$violentHalfMile,afterIncidents$violentNotHalfMile, paired=TRUE)
+t.test(beforeIncidents$violentNotHalfMile,afterIncidents$violentNotHalfMile, paired=TRUE)
 print("NON-VIOLENT NOT HALF MILE")
 t.test(beforeIncidents$nonviolentNotHalfMile,afterIncidents$nonviolentNotHalfMile, paired=TRUE)
 print("LARCENY NOT HALF MILE")
