@@ -1,6 +1,8 @@
 var mymap = L.map('map', {
   center: [34.035760, -118.483196],
   zoom: 13,
+  minZoom: 13,
+  maxZoom: 14,
   maxBounds: L.latLngBounds([33.97, -118.58], [34.12, -118.38])
 });
 
@@ -78,27 +80,45 @@ color = d3.scaleSequential(d3.interpolateGreens).domain([0,1]);
 d3.queue()
   .defer(d3.json, "./data/map/2640_dissolve.geojson")
   .defer(d3.json, "./data/map/5280_dissolve.geojson")
-  .defer(d3.json, "./data/map/grid_big_join.geojson")
-  .defer(d3.json, "./data/map/heatmap_after_grid.geojson")
-  .defer(d3.json, "./data/map/heatmap_before_grid.geojson")
+  .defer(d3.json, "./data/map/heatmap.geojson")
+  .defer(d3.json, "./data/map/expo_line.geojson")
+  .defer(d3.json, "./data/map/expo_stations.geojson")
   .await(makeMyMap);
 
-function makeMyMap(error, half, mile, new_grid, grid, after, before){
+function makeMyMap(error, half, mile, grid, line, stations){
   if (error) throw error;
 
   var outlineStyle = {
       "fillOpacity": 0,
-      "weight": 2,
+      "weight": 3,
       "color": "black",
       "interactive": "false"
   };
 
-  geojson = L.geoJSON(new_grid, {
+  var geojsonMarkerOptions = {
+    radius: 6,
+    fillColor: "white",
+    color: "black",
+    weight: 3,
+    opacity: 1,
+    fillOpacity: 1
+};
+
+  geojson = L.geoJSON(grid, {
     style: function(feature) {
       if (feature.properties.P_Value == 0) { return {opacity: 0, fillOpacity: 0}; }
       else { return {fillColor : color(feature.properties.P_Value), fillOpacity: .5, opacity: 0, color: color(feature.properties.P_Value)}; };
       },
     onEachFeature: onEachFeature }).addTo(mymap);
+
+
+    L.geoJSON(line, {style: outlineStyle}).addTo(mymap);
+
+    L.geoJSON(stations, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, geojsonMarkerOptions);
+        }
+      }).addTo(mymap);
 
     L.geoJSON(half, {style: outlineStyle}).addTo(mymap);
     L.geoJSON(mile, {style: outlineStyle}).addTo(mymap);
