@@ -39,9 +39,9 @@ body {
   content:"";
   background: #fff;
   position: absolute;
-  bottom: -5px;
-  left: 0;
-  height: 3px;
+  bottom: -3px;
+  left: 1px;
+  height: 2px;
   width: 75px;
   /* border-bottom: 1px solid black; */
 }

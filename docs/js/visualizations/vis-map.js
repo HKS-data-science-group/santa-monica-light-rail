@@ -3,8 +3,7 @@ var mymap = L.map('map', {
   zoom: 13,
   minZoom: 13,
   maxZoom: 14,
-  maxBounds: L.latLngBounds([34, -118.55], [34.08, -118.41]),
-  maxBoundsViscosity: .5,
+  maxBounds: L.latLngBounds([33.97, -118.58], [34.12, -118.38])
 });
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -14,7 +13,6 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     accessToken: 'pk.eyJ1IjoiYnJpYW5obyIsImEiOiJjamRwNWpnM2owYnV0MnJvNG04N2NibGM1In0.BNR4X5tmi6eTuVQg4L20jA'
 }).addTo(mymap);
 
-/*
 function highlightFeature(e) {
     var layer = e.target;
 
@@ -34,6 +32,8 @@ function resetHighlight(e) {
     geojson.resetStyle(e.target);
 }
 
+var geojson;
+
 function zoomToFeature(e) {
     map.fitBounds(e.target.getBounds());
 }
@@ -48,8 +48,6 @@ function onEachFeature(feature, layer) {
     });
   }
 }
-*/
-var geojson;
 
 color = d3.scaleSequential(d3.interpolateGreens).domain([0,1]);
 
@@ -65,26 +63,19 @@ function makeMyMap(error, half, mile, grid, line, stations){
   if (error) throw error;
 
   var outlineStyle = {
-      "fillOpacity": 0,
-      "weight": 3,
-      "color": "black",
-      "interactive": false
-  };
-
-  var serviceAreaStyle = {
-      "fillOpacity": 0,
-      "weight": 1,
-      "color": "black",
-      "interactive": false
+      fillOpacity: 0,
+      weight: 3,
+      color: "black",
+      interactive: "false"
   };
 
   var geojsonMarkerOptions = {
-      radius: 6,
-      fillColor: "white",
-      color: "black",
-      weight: 3,
-      opacity: 1,
-      fillOpacity: 1
+    radius: 6,
+    fillColor: "white",
+    color: "#0099cb",
+    weight: 3,
+    opacity: 1,
+    fillOpacity: 1
 };
 
   geojson = L.geoJSON(grid, {
@@ -92,21 +83,17 @@ function makeMyMap(error, half, mile, grid, line, stations){
       if (feature.properties.P_Value == 0) { return {opacity: 0, fillOpacity: 0}; }
       else { return {fillColor : color(feature.properties.P_Value), fillOpacity: .5, opacity: 0, color: color(feature.properties.P_Value)}; };
       },
-    // onEachFeature: onEachFeature
-  }).addTo(mymap);
+    onEachFeature: onEachFeature }).addTo(mymap);
 
 
-  L.geoJSON(line, {style: outlineStyle}).addTo(mymap);
+    L.geoJSON(line, {style: outlineStyle}).addTo(mymap);
 
-  L.geoJSON(stations, {
-      pointToLayer: function (feature, latlng) {
-          return L.circleMarker(latlng, geojsonMarkerOptions);
-      }
-    }).addTo(mymap);
+    L.geoJSON(stations, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, geojsonMarkerOptions);
+        }
+      }).addTo(mymap);
 
-  halfLayer = L.geoJSON(half, {style: serviceAreaStyle, interactive: false}).addTo(mymap);
-  mileLayer = L.geoJSON(mile, {style: serviceAreaStyle, interactive: false}).addTo(mymap);
-
-  halfLayer.setZIndex(10);
-  mileLayer.setZIndex(11)
+    L.geoJSON(half, {style: outlineStyle}).addTo(mymap);
+    L.geoJSON(mile, {style: outlineStyle}).addTo(mymap);
 };
