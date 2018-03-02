@@ -1,9 +1,10 @@
 
-AreaVis = function(_parentElement, _data, _chartType){
+AreaVis = function(_parentElement, _data, _chartType, _yScaleDomain){
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = [];
     this.chartType = _chartType;
+    this.yScaleDomain = _yScaleDomain;
 
     this.initVis();
 };
@@ -30,7 +31,8 @@ AreaVis.prototype.initVis = function() {
         }));
 
     vis.yScale = d3.scaleLinear()
-        .rangeRound([vis.height, 0]);
+        .rangeRound([vis.height, 0])
+        .domain(vis.yScaleDomain);
 
     vis.xAxis = d3.axisBottom()
         .scale(vis.xScale)
@@ -108,10 +110,6 @@ AreaVis.prototype.wrangleData = function() {
     var vis = this;
 
     vis.displayData = vis.data;
-
-    vis.yScale.domain(d3.extent(vis.displayData, function(d) {
-        return d.value;
-    }));
 
     vis.updateVis();
 
