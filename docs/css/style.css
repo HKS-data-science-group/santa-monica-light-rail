@@ -13,14 +13,22 @@ body {
     height: auto;
   }
 
+.jumbotron {
+  background: #0099cb;
+  height: 120px;
+  margin-bottom: 45px;
+}
+
 .section-header {
-    font-family: 'Roboto Slab', serif;
-    opacity:.8;
-    color: #333333;
+    /* font-family: 'Roboto Slab', serif; */
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+    opacity:1;
+    color: #ffffff;
     font-size: 30px;
     text-align: left;
     font-weight: normal;
-    margin-top: 60px;
+    margin-top: 0px;
     margin-bottom: 45px;
     /* padding-top: 60px; */
     padding-right: 15px;
@@ -29,9 +37,9 @@ body {
 
 .section-header:after {
   content:"";
-  background: #333;
+  background: #fff;
   position: absolute;
-  bottom: -10px;
+  bottom: -5px;
   left: 0;
   height: 3px;
   width: 75px;
@@ -145,6 +153,13 @@ body {
 .data-science-logo {
     color: #A51C30;
     font-size: 40px;
+}
+
+.data-science-logo-small {
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 100;
+    font-size: 14px;
 }
 
 /* Styles for map */

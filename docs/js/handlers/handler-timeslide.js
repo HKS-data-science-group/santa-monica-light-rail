@@ -7,8 +7,8 @@ var lineColorMapping = {
     "all": "#0099CB",
     "larceny": "#0099CB",
     "original": "#0099CB",
-    "SARIMA": "#6Eb96b",
-    "Prophet": "#D93C45"
+    "SARIMA": "#9e9f9f",
+    "Prophet": "#f0b342"
 };
 
 queue()
