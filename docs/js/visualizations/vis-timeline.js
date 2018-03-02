@@ -1,9 +1,10 @@
 
-LineVis = function(_parentElement, _data, _chartType){
+LineVis = function(_parentElement, _data, _chartType, _xScaleDomain){
     this.parentElement = _parentElement;
     this.data = _data;
     this.displayData = [];
     this.chartType = _chartType;
+    this.xScaleDomain = _xScaleDomain;
 
     this.initVis();
 };
@@ -25,11 +26,7 @@ LineVis.prototype.initVis = function() {
 
     vis.xScale = d3.scaleTime()
         .range([0, vis.width])
-        .domain([d3.min(vis.data, function(d) {
-            return d3.min(d.values, function(b) { return b.date; });
-        }), d3.max(vis.data, function(d) {
-            return d3.max(d.values, function(b) { return b.date; });
-        })]);
+        .domain(vis.xScaleDomain);
 
     vis.yScale = d3.scaleLinear()
         .rangeRound([vis.height, 0]);
