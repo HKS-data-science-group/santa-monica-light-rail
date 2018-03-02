@@ -66,9 +66,13 @@ queue()
             .sortKeys(d3.ascending)
             .entries(seasonalChartData);
 
-        var actualChart = new LineVis('timeline-chart-actual', actualChartData, "actual");
-        var trendChart = new LineVis('timeline-chart-trend', trendChartData, "trend");
-        var seasonalChart = new LineVis('timeline-chart-seasonal', seasonalChartData, "seasonal");
+        var decompositionChartsDomain = d3.extent(timeData, function(d) {
+            return d3.timeParse("%Y-%m-%d")(d.date)
+        });
+
+        var actualChart = new LineVis('timeline-chart-actual', actualChartData, "actual", decompositionChartsDomain);
+        var trendChart = new LineVis('timeline-chart-trend', trendChartData, "trend", decompositionChartsDomain);
+        var seasonalChart = new LineVis('timeline-chart-seasonal', seasonalChartData, "seasonal", decompositionChartsDomain);
         timeCharts = [actualChart, trendChart, seasonalChart];
         timeCharts.forEach(function(d) {
             createToolTip(d);
@@ -102,9 +106,18 @@ queue()
             .sortKeys(d3.ascending)
             .entries(trendChartData);
 
-        var trendChart = new LineVis('trend-forecast-chart', trendChartData, "forecast");
-        var sarimaDiffChart = new AreaVis('sarima-diff-chart', sarimaDiffChartData, "SARIMA");
-        var prophetDiffChart = new AreaVis('prophet-diff-chart', prophetDiffChartData, "Prophet");
+        var forecastChartsDomain = d3.extent(trendData, function(d) {
+            return d3.timeParse("%m/%d/%Y")(d.ds)
+        });
+
+        var diffChartsDomain = d3.extent(sarimaDiffChartData, function(d) {return d.value; })
+                                .concat(d3.extent(prophetDiffChartData, function(d) {return d.value; }));
+
+        diffChartsDomain = d3.extent(diffChartsDomain);
+
+        var trendChart = new LineVis('trend-forecast-chart', trendChartData, "forecast", forecastChartsDomain);
+        var sarimaDiffChart = new AreaVis('sarima-diff-chart', sarimaDiffChartData, "SARIMA", diffChartsDomain);
+        var prophetDiffChart = new AreaVis('prophet-diff-chart', prophetDiffChartData, "Prophet", diffChartsDomain);
 
     });
 

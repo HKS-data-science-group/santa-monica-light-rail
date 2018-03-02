@@ -167,6 +167,14 @@
 				<div class="section-header">Forecasting Trends</div>
 				<div class="col-md-5">
 					<div class="row explanatory-text">
+						<p>We used standard time series forecasting models to compare crime per day forecasts after the Expo Line opening to the actual trends.
+							If the difference between the forecasted and actual trends was large enough, this could indicate a change in trend as a result of the Expo Line Opening.</p>
+
+						<p>The two models we used were a SARIMA (Seasonal Autoregressive Integrated Moving Average) model, a standard stationary time series model, and a Prophet model,
+							an additive regression model developed by Facebook.</p>
+
+						<p>While the charts illustrate a large residual between the model forecasts and actual trends, neither are statistically significant given the model fits more generally.
+							In addition, none of the Prophet model “change points” corresponded with the Expo Line opening.</p>
 					</div>
 
 				</div>
