@@ -4,11 +4,11 @@ var selectedCrimeType = $( "input[name='crimeTypeRadios']:checked" ).val();
 var trendModels = ["original", "SARIMA", "Prophet"];
 
 var lineColorMapping = {
-    "all": "#CD6737",
-    "larceny": "#CD6737",
-    "original": "#CD6737",
-    "SARIMA": "#4a0073",
-    "Prophet": "#e6c276"
+    "all": "#0099CB",
+    "larceny": "#0099CB",
+    "original": "#0099CB",
+    "SARIMA": "#6Eb96b",
+    "Prophet": "#D93C45"
 };
 
 queue()
