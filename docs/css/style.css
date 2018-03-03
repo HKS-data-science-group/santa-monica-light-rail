@@ -168,6 +168,23 @@ body {
     height: 400px;
 }
 
+.map-label {
+  font-family: 'Roboto Condesned', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.leaflet-tooltip-right:before {
+  border-right-color: #00000000;
+}
+
+.leaflet-tooltip-left:before {
+  border-left-color: #00000000;
+}
+
 /*
  Ensures map is larger when map section is active
  otherwise ensures it doesn't overlap with
@@ -179,7 +196,7 @@ section.active #map {
 
 table.tt-table td {
     font-family: 'Roboto Mono', sans-serif;
-    text-align: middle;
+    text-align: right;
     padding: 0.25em;
     width: 9em;
 }

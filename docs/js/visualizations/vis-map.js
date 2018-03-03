@@ -100,7 +100,8 @@ function makeMyMap(error, half, mile, grid, line, stations){
     L.geoJSON(line, {style: lineStyle}).addTo(mymap);
     L.geoJSON(stations, {
         pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, geojsonMarkerOptions);
+            label = String(feature.properties.name)
+            return L.circleMarker(latlng, geojsonMarkerOptions).bindTooltip(label, {permanent:true, className: 'map-label'}).openTooltip();
         }
       }).addTo(mymap);
 
