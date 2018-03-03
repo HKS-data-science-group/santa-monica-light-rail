@@ -12,7 +12,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
     id: 'mapbox.light',
     accessToken: 'pk.eyJ1IjoiYnJpYW5obyIsImEiOiJjamRwNWpnM2owYnV0MnJvNG04N2NibGM1In0.BNR4X5tmi6eTuVQg4L20jA'
 }).addTo(mymap);
-
+/*
 function highlightFeature(e) {
     var layer = e.target;
 
@@ -48,8 +48,11 @@ function onEachFeature(feature, layer) {
     });
   }
 }
-
-color = d3.scaleSequential(d3.interpolateGreens).domain([0,1]);
+*/
+color = d3.scaleLinear()
+  .domain([0,1])
+  .range([d3.rgb(240,179,66,1),d3.rgb(9,114,179,.1)]);
+// color = d3.scaleSequential(d3.interpolateGreens).domain([0,1]);
 
 d3.queue()
   .defer(d3.json, "./data/map/2640_dissolve.geojson")
@@ -62,10 +65,18 @@ d3.queue()
 function makeMyMap(error, half, mile, grid, line, stations){
   if (error) throw error;
 
-  var outlineStyle = {
+  var areaStyle = {
+      fillOpacity: 0,
+      weight: 1,
+      color: "#005391",
+      dashArray: "1, 2",
+      interactive: "false"
+  };
+
+  var lineStyle = {
       fillOpacity: 0,
       weight: 3,
-      color: "black",
+      color: "#0099cb",
       interactive: "false"
   };
 
@@ -83,17 +94,16 @@ function makeMyMap(error, half, mile, grid, line, stations){
       if (feature.properties.P_Value == 0) { return {opacity: 0, fillOpacity: 0}; }
       else { return {fillColor : color(feature.properties.P_Value), fillOpacity: .5, opacity: 0, color: color(feature.properties.P_Value)}; };
       },
-    onEachFeature: onEachFeature }).addTo(mymap);
+    // onEachFeature: onEachFeature
+  }).addTo(mymap);
 
-
-    L.geoJSON(line, {style: outlineStyle}).addTo(mymap);
-
+    L.geoJSON(line, {style: lineStyle}).addTo(mymap);
     L.geoJSON(stations, {
         pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng, geojsonMarkerOptions);
         }
       }).addTo(mymap);
 
-    L.geoJSON(half, {style: outlineStyle}).addTo(mymap);
-    L.geoJSON(mile, {style: outlineStyle}).addTo(mymap);
+    L.geoJSON(half, {style: areaStyle}).addTo(mymap);
+    L.geoJSON(mile, {style: areaStyle}).addTo(mymap);
 };

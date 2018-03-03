@@ -42,7 +42,7 @@ body {
   bottom: -3px;
   left: 1px;
   height: 2px;
-  width: 75px;
+  width: 50px;
   /* border-bottom: 1px solid black; */
 }
 
@@ -169,7 +169,7 @@ body {
 }
 
 /*
- Ensures map is larger when map section is actively
+ Ensures map is larger when map section is active
  otherwise ensures it doesn't overlap with
  statistical analysis section
 */
@@ -178,10 +178,26 @@ section.active #map {
 }
 
 table.tt-table td {
+    font-family: 'Roboto Mono', sans-serif;
+    text-align: middle;
     padding: 0.25em;
     width: 9em;
 }
 
 table.tt-table td.tt-long-cell {
     width: 20em;
+}
+
+table.tt-table td.text {
+    font-family: 'Roboto Condensed', sans-serif;
+    text-align: left;
+}
+
+table.tt-table td.text-col {
+    font-family: 'Roboto Condensed', sans-serif;
+    text-align: middle;
+}
+
+.tt-p-legend {
+  font-family: 'Roboto Mono', sans-serif;
 }

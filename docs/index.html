@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>SM Light Rail</title>
 	<!-- Load Google Font -->
-	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Roboto|Titillium+Web|Inconsolata|Lato" rel="stylesheet" type='text/css'>
+	<!-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Roboto|Titillium+Web|Inconsolata|Lato" rel="stylesheet" type='text/css'> -->
 	<link rel="icon", href="">
 	<link rel="stylesheet" href="css/libraries/bootstrap.min.css">
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="css/libraries/jquery-ui.min.css">
 	<link rel="stylesheet" href="css/libraries/leaflet.css">
 	<link rel="stylesheet" href="css/style.css">
-		<link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,700|Roboto:100,300,300i,500,700,900|Roboto+Condensed:300,400,700" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:100,300,300i,500,700,900|Roboto+Condensed:300,400,700" rel="stylesheet">
 </head>
 <body>
 	<div id="fullPage">
@@ -114,7 +114,9 @@
 						</div>
 
 						<div class="col-md-5">
-							<p> To assess the change in crime over time in the context of geography, we ran a series of statistical <i>t</i>-tests on an analysis grid.</p>
+							<p> To assess the change in crime over time in the context of geography, we ran a series of statistical paired <i>t</i>-tests on an analysis grid, where the unit of analysis cooresponded to a square area one-hundredth of a decimal degree in length. The tests compared the distribution over time of crimes in the area of analysis for a year prior to the opening of the expo line, against the distribution over time of crimes for a year after opening</p>
+
+							<p>In the map to the left, statistically significant p-value results from the <i>t</i>-test are shown in yellow — meaning the difference in crime was more likely to not be caused by random variance. The spatial distribution of signficant changes in crime suggest there might be some relationship between the location of Expo line stations and cooresponding crime around those stations and the beach.</p>
 						</div>
 
 				</div>
@@ -130,44 +132,44 @@
 			</div>
 			<div class="container">
 				<div class="col-md-7">
-					<h4>Difference in Means (Daily)</h4>
+					<h4 class="chart-title">Difference in Means (Daily)</h4>
 					<table class="tt-table">
 					<thead>
 					 <tr>
 					 	<td>&nbsp;</td><td>&nbsp;</td>
-					 	<td>All Santa Monica</td>
-					 	<td>Within Half Mile</td>
-					 	<td>All Except Half Mile</td>
+					 	<td class="text-col">All Santa Monica</td>
+					 	<td class="text-col">Within Half Mile</td>
+					 	<td class="text-col">All Except Half Mile</td>
 					 </tr>
 					</thead>
 					<tbody>
 					 <tr>
-					 	<td>Type of Incident</td>
-					 	<td>Total</td>
+					 	<td class="text">Type of Incident</td>
+					 	<td class="text">Total</td>
 					 	<td>1.10***</td>
 					 	<td>1.21***</td>
-					 	<td>-0.10</td>
+					 	<td>-0.10&nbsp;&nbsp;&nbsp;</td>
 					 </tr>
 					 <tr>
 					 	<td>&nbsp;</td>
-					 	<td>Violent</td>
-					 	<td>0.13</td>
-					 	<td>0.18**</td>
-					 	<td>-0.05</td>
+					 	<td class="text">Violent</td>
+					 	<td>0.13&nbsp;&nbsp;&nbsp;</td>
+					 	<td>0.18**&nbsp; </td>
+					 	<td>-0.05&nbsp;&nbsp;&nbsp;</td>
 					 </tr>
 					 <tr>
 					 	<td>&nbsp;</td>
-					 	<td>Non-Violent</td>
-					 	<td>0.99*</td>
+					 	<td class="text">Non-Violent</td>
+					 	<td>0.99*&nbsp;&nbsp;</td>
 					 	<td>1.03***</td>
-					 	<td>-0.04</td>
+					 	<td>-0.04&nbsp;&nbsp;&nbsp;</td>
 					 </tr>
 					 <tr>
 					 	<td>&nbsp;</td>
-					 	<td>Larceny</td>
+					 	<td class="text">Larceny</td>
 					 	<td>1.46***</td>
 					 	<td>0.99***</td>
-					 	<td>0.48**</td>
+					 	<td>&nbsp;0.48**&nbsp;</td>
 					 </tr>
 					 <tr>
 					 	<td>&nbsp;</td>
@@ -178,7 +180,7 @@
 					 </tr>
 					</tbody>
 				</table>
-					<div class="tt-p-legend">*p<0.1; **p<0.05; ***p<0.01</div>
+					<div class="tt-p-legend">*p < 0.1&emsp;**p < 0.05&emsp;***p < 0.01</div>
 				</div>
 				<div class="col-md-5">
 					<div class="row explanatory-text">
