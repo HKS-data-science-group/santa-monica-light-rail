@@ -46,6 +46,10 @@ body {
   /* border-bottom: 1px solid black; */
 }
 
+.section {
+  min-height: 100vh;
+}
+
 .explanatory-text {
     font-size: 15px;
 }
