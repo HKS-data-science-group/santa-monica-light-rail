@@ -1,9 +1,9 @@
 var mymap = L.map('map', {
-  center: [34.035760, -118.483196],
-  zoom: 13,
-  minZoom: 13,
-  maxZoom: 14,
-  maxBounds: L.latLngBounds([33.97, -118.58], [34.12, -118.38])
+  center: [33.99, -118.483196],
+  zoom: 12,
+  minZoom: 12,
+  maxZoom: 13,
+  maxBounds: L.latLngBounds([33.98, -118.58], [34.12, -118.38])
 });
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {

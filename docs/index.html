@@ -31,13 +31,13 @@
 					<div class="row explanatory-text">
 						<p>The completion of the LA Metro's <a href="http://www.latimes.com/entertainment/arts/la-et-cm-expo-line-hawthorne-20160518-snap-htmlstory.html">Expo Line extension to Santa Monica</a> in May 2016 brought passenger rail back to the Westside.</p>
 
-						<p>Rail connection between Los Angeles and Santa Monica has historic importance: Santa Monica's origins are directly tied to the development of a railroad — LA's second — between downtown and the oceanside at the <a href="https://www.kcet.org/shows/lost-la/rail-returns-to-the-westside-the-expo-lines-historical-precursors">end of the 19th century</a>.</p>
-
-						<p>In the present context of the LA metropolitan area, the <a href="https://www.metro.net/projects/expo-santa-monica/">Expo Line extension</a> and related transportation infrastructure, like Santa Monica's <a href="https://santamonicabikeshare.com">Breeze bikeshare</a>, provide a much-needed alternative to car travel — in a region dominated by automobile use, and suffering from related financial costs of <a href="http://inrix.com/press-releases/scorecard-2017/">traffic congestion</a> and the effects of <a hef="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1447999/">air pollution</a>.</p>
-
 						<p>Already, the Expo Line extension has led to <a href="http://www.latimes.com/entertainment/arts/la-ca-cm-building-type-expo-line-20170521-story.html">increased ridership</a> and been shown to <a href="https://priceschool.usc.edu/files/2013/12/Final-Boarnet-Expo-Line-Report-for-Web.pdf">decrease vehicle use</a> in nearby househoulds.</p>
 
 						<p>The arrival of light rail into Santa Monica did, however, prompt questions around a possible increase in crime. We were asked by the City of Santa Monica to explore the impact, if any, of the extension of the LA Metro Expo Line into Santa Monica</a> on crime.</p>
+
+						<p>Our primary data source was the <a href="https://data.smgov.net/Public-Safety/Police-Incidents/kn6p-4y74">Police Incidents</a> dataset available on Santa Monica's open data portal. We removed all data points that either did not have a date or location (latitude and/or longitude). While the number of datapoints removed was relatively small (~2,000 out of 100,000+), the removed data points were <a href="https://github.com/HKS-data-science-group/santa-monica-light-rail/blob/master/Clean%20Crime%20Dataset.ipynb"> more heavily weighted</a> towards events after the Expo Line's opening as compared to the overall dataset.</p>
+
+						<p>We also looked at the <a href="https://data.smgov.net/Public-Safety/Police-Calls-for-Service/ia9m-wspt">Police Calls for Service</a> dataset to confirm some of the trends we were seeing in the incidents database, but ultimately did not incorporate that data into the final analysis.</p>
 					</div>
 				</div>
 
@@ -60,8 +60,8 @@
 				<div class="col-md-5">
 					<div class="row explanatory-text">
 						<p>In order to better understand the underlying trends in the noisy crimes per day data, we used an additive time series decomposition approach.</p>
-							<p>As you can see on the left, once seasonality and randomness (not shown) are removed from the actual time series data, the data indicates a clear
-							increase in larceny after the expo line opened.</p>
+							<p>As you can see on the right, once seasonality and randomness (not shown) are removed from the actual time series data, the data indicates an
+							increasing trend in larceny incidents after the expo line opened, though this trend was already increasing before the line's opening.</p>
 						<p>This trend line is less clear for all crimes, indicating that at least part of the increase
 							in larceny was offset by a decrease in a number of other crime types.</p>
 						<p>We decided to take a closer look at larceny in particular as the initial trend
@@ -110,88 +110,73 @@
 						<div class="row explanatory-text">
 
 						<div class="col-md-7">
+							<h4 class="chart-title">Difference in Means (Daily)</h4>
+							<table class="tt-table">
+								<thead>
+								<tr style="font-weight:bold">
+									<td>&nbsp;</td><td>&nbsp;</td>
+									<td class="text-col">All Santa Monica</td>
+									<td class="text-col">Within Half Mile</td>
+									<td class="text-col">Outside Half Mile</td>
+								</tr>
+								</thead>
+								<tbody>
+								<tr style="background: #ddd">
+									<td class="text">Incident Type</td>
+									<td class="text">Total</td>
+									<td>1.10***</td>
+									<td>1.21***</td>
+									<td>-0.10&nbsp;&nbsp;&nbsp;</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td class="text">Violent</td>
+									<td>0.13&nbsp;&nbsp;&nbsp;</td>
+									<td>0.18**&nbsp; </td>
+									<td>-0.05&nbsp;&nbsp;&nbsp;</td>
+								</tr>
+								<tr style="background: #ddd">
+									<td>&nbsp;</td>
+									<td class="text">Non-Violent</td>
+									<td>0.99*&nbsp;&nbsp;</td>
+									<td>1.03***</td>
+									<td>-0.04&nbsp;&nbsp;&nbsp;</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td class="text">Larceny</td>
+									<td>1.46***</td>
+									<td>0.99***</td>
+									<td>&nbsp;0.48**&nbsp;</td>
+								</tr>
+								<tr>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								</tbody>
+							</table>
+							<div class="tt-p-legend">*p < 0.1&emsp;**p < 0.05&emsp;***p < 0.01</div><br>
+
 							<div id="map"></div>
 						</div>
 
 						<div class="col-md-5">
-							<p> To assess the change in crime over time in the context of geography, we ran a series of statistical paired <i>t</i>-tests on an analysis grid, where the unit of analysis cooresponded to a square area one-hundredth of a decimal degree in length. The tests compared the distribution over time of crimes in the area of analysis for a year prior to the opening of the expo line, against the distribution over time of crimes for a year after opening</p>
+							<p>To test if there was a statistically significant difference in the number of daily crimes one year
+								before vs. one year after the Expo Line opened, we used a paired t-test.</p>
+
+							<p>As the table shows there are statistically significant increases in non-violent crime, in particular larceny.
+								These differences are higher within a half mile radius of the line when compared to areas outside of the half mile radius.</p>
+
+							<p style="margin-top: 90px;"> To assess the change in crime over time in the context of geography, we ran a series of statistical paired <i>t</i>-tests on an analysis grid, where the unit of analysis cooresponded to a square area one-hundredth of a decimal degree in length. The tests compared the distribution over time of crimes in the area of analysis for a year prior to the opening of the expo line, against the distribution over time of crimes for a year after opening</p>
 
 							<p>In the map to the left, statistically significant p-value results from the <i>t</i>-test are shown in yellow — meaning the difference in crime was more likely to not be caused by random variance. The spatial distribution of signficant changes in crime suggest there might be some relationship between the location of Expo line stations and cooresponding crime around those stations and the beach.</p>
 						</div>
 
 				</div>
 				</div>
-		</section>
-
-		<section class="section">
-			<div class="jumbotron">
-				<div class="container">
-					<div class="section-header">Statistical Analysis
-						<span class="data-science-logo-small pull-right"><strong>HKS</strong>DataScienceGroup</span></div>
-				</div>
-			</div>
-			<div class="container">
-				<div class="col-md-7">
-					<h4 class="chart-title">Difference in Means (Daily)</h4>
-					<table class="tt-table">
-					<thead>
-					 <tr style="font-weight:bold">
-					 	<td>&nbsp;</td><td>&nbsp;</td>
-					 	<td class="text-col">All Santa Monica</td>
-					 	<td class="text-col">Within Half Mile</td>
-					 	<td class="text-col">Outside Half Mile</td>
-					 </tr>
-					</thead>
-					<tbody>
-					 <tr style="background: #ddd">
-					 	<td class="text">Incident Type</td>
-					 	<td class="text">Total</td>
-					 	<td>1.10***</td>
-					 	<td>1.21***</td>
-					 	<td>-0.10&nbsp;&nbsp;&nbsp;</td>
-					 </tr>
-					 <tr>
-					 	<td>&nbsp;</td>
-					 	<td class="text">Violent</td>
-					 	<td>0.13&nbsp;&nbsp;&nbsp;</td>
-					 	<td>0.18**&nbsp; </td>
-					 	<td>-0.05&nbsp;&nbsp;&nbsp;</td>
-					 </tr>
-					 <tr style="background: #ddd">
-					 	<td>&nbsp;</td>
-					 	<td class="text">Non-Violent</td>
-					 	<td>0.99*&nbsp;&nbsp;</td>
-					 	<td>1.03***</td>
-					 	<td>-0.04&nbsp;&nbsp;&nbsp;</td>
-					 </tr>
-					 <tr>
-					 	<td>&nbsp;</td>
-					 	<td class="text">Larceny</td>
-					 	<td>1.46***</td>
-					 	<td>0.99***</td>
-					 	<td>&nbsp;0.48**&nbsp;</td>
-					 </tr>
-					 <tr>
-					 	<td>&nbsp;</td>
-					 	<td>&nbsp;</td>
-					 	<td>&nbsp;</td>
-					 	<td>&nbsp;</td>
-					 	<td>&nbsp;</td>
-					 </tr>
-					</tbody>
-				</table>
-					<div class="tt-p-legend">*p < 0.1&emsp;**p < 0.05&emsp;***p < 0.01</div><br>
-				</div>
-				<div class="col-md-5">
-					<div class="row explanatory-text">
-						<p>To test if there was a statistically significant difference in the number of daily crimes one year
-						before vs. one year after the Expo Line opened, we used a paired t-test.</p>
-
-						<p>As the table shows there are statistically significant increases in non-violent crime, in particular larceny.
-						These differences are higher within a half mile radius of the line when compared to areas outside of the half mile radius.</p>
-					</div>
-				</div>
-			</div>
 		</section>
 
 		<section class="section">
@@ -207,7 +192,7 @@
 						<p>We used standard time series forecasting models to compare crime per day forecasts after the Expo Line opening to the actual trends.
 							If the difference between the forecasted and actual trends was large enough, this could indicate a change in trend as a result of the Expo Line Opening.</p>
 
-						<p>The two models we used were a SARIMA (Seasonal Autoregressive Integrated Moving Average) model, a standard stationary time series model, and a Prophet model,
+						<p>The two models we used were a SARIMA (Seasonal Autoregressive Integrated Moving Average) model and a Prophet model, which is
 							an additive regression model developed by Facebook.</p>
 
 						<p>While the charts illustrate a large residual between the model forecasts and actual trends, neither are statistically significant given the model fits more generally.
@@ -233,16 +218,47 @@
 		<section class="section">
 			<div class="jumbotron">
 				<div class="container">
+					<div class="section-header">Conclusion
+						<span class="data-science-logo-small pull-right"><strong>HKS</strong>DataScienceGroup</span>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+				<div class="col-md-5">
+					<div class="row explanatory-text">
+						<p>While there are indications that non-violent crime, in particular larceny, increased after the opening of the Expo Line, the actual link between the line and these crimes is unclear.</p>
+
+						<p>Statistical t-tests do show a significant difference in certain types of crimes per day one year after the opening of the line as compared to one year before. Additionally, these differences appear to be stronger in regions closer to the Expo Line stations.</p>
+
+						<p>However, when analyzing the actual crime trends using both additive decomposition and forecasting models like SARIMA and Prophet, little evidence emerges of a link between the line opening and crime rate increases.</p>
+
+						<p>Overall, data on the residence of both those people who commit the crime and are victims of it would help illuminate the issue, however this data is highly sensitive it available at all.</p>
+					</div>
+				</div>
+
+				<div class="col-md-6 col-md-offset-1">
+					<img class="img-fluid" src="data/conclusion/expo-line-pic.jpg"></img>
+				</div>
+
+
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="jumbotron">
+				<div class="container">
 					<div class="section-header">About Us</div>
 				</div>
 			</div>
 			<div class="container">
 				<div class="col-md-6">
+
 					<div class="row data-science-logo"><strong>HKS</strong>DataScienceGroup</div>
 					<div class="row explanatory-text">
 						<br>
 						<p>The HKS Data Science Group is a group of students that helps public sector organizations with their
 							data science and machine learning problems.</p>
+						<p>All code and analysis can be found in our <a href="https://github.com/HKS-data-science-group/santa-monica-light-rail">Github</a> repo.</p>
 						<p>If you're an organization looking for help, please reach out to <a href="mailto:ihsaan_patel@hks18.harvard.edu">ihsaan_patel@hks18.harvard.edu</a>.</p>
 						<p>If you're a student looking to get involved, visit our <a href="https://www.hksdatascience.com">website</a>.</p>
 					</div>

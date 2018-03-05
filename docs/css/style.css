@@ -165,7 +165,7 @@ body {
 /* Styles for map */
 #map {
     width: 100%;
-    height: 400px;
+    height: 300px;
 }
 
 .map-label {
@@ -191,7 +191,7 @@ body {
  statistical analysis section
 */
 section.active #map {
-    height: 600px;
+    height: 300px;
 }
 
 table.tt-table td {
